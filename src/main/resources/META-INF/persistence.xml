@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="duqhan-db" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <!--    <properties>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+      <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+      <property name="hibernate.connection.username" value="${jdbc.username}"/>
+      <property name="hibernate.connection.password" value="${jdbc.password}"/>
+      <property name="hibernate.connection.url" value="${jdbc.url}"/>
+      <property name="hibernate.hbm2ddl.auto" value="create-update"/>
+      <property name="hibernate.ejb.autodetection" value="class"/>
+    </properties>-->
+    <!--<class>in.cloudlabz.tradengain.domain.Test</class>-->
+    <class>com.weavers.duqhan.domain.Kart</class>
+    <class>com.weavers.duqhan.domain.Store</class>
+    <class>com.weavers.duqhan.domain.PurchaseOrder</class>
+    <class>com.weavers.duqhan.domain.Cart</class>
+    <class>com.weavers.duqhan.domain.SizeGroup</class>
+    <class>com.weavers.duqhan.domain.PaymentDetail</class>
+    <class>com.weavers.duqhan.domain.Users</class>
+    <class>com.weavers.duqhan.domain.UserAddress</class>
+    <class>com.weavers.duqhan.domain.Color</class>
+    <class>com.weavers.duqhan.domain.Category</class>
+    <class>com.weavers.duqhan.domain.Product</class>
+    <class>com.weavers.duqhan.domain.Sizee</class>
+    <class>com.weavers.duqhan.domain.ProductImg</class>
+    <class>com.weavers.duqhan.domain.RecentView</class>
+    <class>com.weavers.duqhan.domain.ProductSizeColorMap</class>
+    <class>com.weavers.duqhan.domain.OrderDetails</class>
+    <class>com.weavers.duqhan.domain.OtpTable</class>
+    <class>com.weavers.duqhan.domain.Vendor</class>
+    <class>com.weavers.duqhan.domain.ShipmentTable</class>
+    <class>com.weavers.duqhan.domain.UserActivity</class>
+    <class>com.weavers.duqhan.domain.SpecificationJewelry</class>
+    <class>com.weavers.duqhan.domain.DuqhanAdmin</class>
+    <class>com.weavers.duqhan.domain.Specification</class>
+    <class>com.weavers.duqhan.domain.Temtproductlinklist</class>
+    <class>com.weavers.duqhan.domain.TempProductImg</class>
+    <class>com.weavers.duqhan.domain.TempProduct</class>
+    <class>com.weavers.duqhan.domain.TempProductSizeColorMap</class>
+  </persistence-unit>
+</persistence>
