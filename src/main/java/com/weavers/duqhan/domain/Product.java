@@ -9,6 +9,7 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,6 +30,8 @@ public class Product extends BaseDomain {
     @NotNull
     @Column(name = "category_id")
     private long categoryId;
+    @Lob
+    @Size(max = 65535)
     @Column(name = "description")
     private String description;
     @Basic(optional = false)

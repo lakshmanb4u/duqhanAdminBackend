@@ -56,15 +56,15 @@
         
         <!-- Local Configuration -->
     
-<!--        <property name="url" value="jdbc:mysql://localhost:3306/duqhandb" />
+        <property name="url" value="jdbc:mysql://localhost:3306/duqhandb" />
         <property name="username" value="root" />
-        <property name="password" value="" /> -->
+        <property name="password" value="" /> 
     
         <!-- Server Configuration -->
         
-                <property name="url" value="jdbc:mysql://aa168jeiyp7tfdz.chrj0eff2nnw.us-west-2.rds.amazonaws.com:3306/duqhandb" />
+<!--                <property name="url" value="jdbc:mysql://aa168jeiyp7tfdz.chrj0eff2nnw.us-west-2.rds.amazonaws.com:3306/duqhandb" />
         <property name="username" value="duqhunDbAdmin" />
-        <property name="password" value="wgJncDU2M-=vMkEU" />
+        <property name="password" value="wgJncDU2M-=vMkEU" />-->
         
         <!-- Temp Server Configuration -->
         <!--        

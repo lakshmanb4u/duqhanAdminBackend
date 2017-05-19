@@ -27,7 +27,8 @@ public class TempProduct extends BaseDomain {
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Lob
+    @Size(min = 1, max = 65535)
     @Column(name = "name")
     private String name;
     @Basic(optional = false)

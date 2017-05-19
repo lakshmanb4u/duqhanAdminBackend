@@ -20,6 +20,8 @@ import com.weavers.duqhan.dto.SizeDto;
 import com.weavers.duqhan.dto.SpecificationDto;
 import com.weavers.duqhan.dto.StatusBean;
 import com.weavers.duqhan.dto.TransforDto;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -393,7 +395,6 @@ public class AdminController {
     }
 
     //<editor-fold defaultstate="collapsed" desc="Web Crawler">
-    
     @RequestMapping(value = "/load-temp-product-list", method = RequestMethod.POST)  //
     @ResponseBody
     public TransforDto loadTempProduct(@RequestBody StatusBean statusBean, HttpServletRequest request, HttpServletResponse response1) {
@@ -409,7 +410,7 @@ public class AdminController {
         }
         return transforDto;
     }
-    
+
     @RequestMapping(value = "/get-temp-product-list", method = RequestMethod.POST)  //
     @ResponseBody
     public TransforDto getTempProduct(@RequestBody ProductRequistBean requistBean, HttpServletRequest request, HttpServletResponse response1) {
@@ -425,7 +426,7 @@ public class AdminController {
         }
         return transforDto;
     }
-    
+
     @RequestMapping(value = "/save-temp-products", method = RequestMethod.POST)  // crall list of ali express link, store in tempproduct and reletave tables
     @ResponseBody
     public TransforDto saveTempProducts(@RequestBody TransforDto transforDto, HttpServletRequest request, HttpServletResponse response1) {
@@ -440,7 +441,7 @@ public class AdminController {
         }
         return transforDto1;
     }
-    
+
     //********
     @RequestMapping(value = "/get-temp-product-lise", method = RequestMethod.POST)  //
     @ResponseBody
@@ -457,7 +458,7 @@ public class AdminController {
         }
         return productBeans;
     }
-    
+
     @RequestMapping(value = "/update-temp-product-details", method = RequestMethod.POST)  //
     @ResponseBody
     public StatusBean updateTempProduct(@RequestBody ProductBean productBean, HttpServletRequest request, HttpServletResponse response1) {
@@ -474,7 +475,7 @@ public class AdminController {
         }
         return response;
     }
-    
+
     @RequestMapping(value = "/get-temp-product-inventory", method = RequestMethod.POST)  //
     @ResponseBody
     public ProductBean getTempProductInventory(@RequestBody ProductRequistBean requistBean, HttpServletRequest request, HttpServletResponse response1) {
@@ -490,7 +491,7 @@ public class AdminController {
         }
         return productBean;
     }
-    
+
     @RequestMapping(value = "/update-temp-product-inventory", method = RequestMethod.POST)  //
     @ResponseBody
     public StatusBean updateTempProductInventory(@RequestBody ProductBean productBean, HttpServletRequest request, HttpServletResponse response1) {
@@ -505,7 +506,7 @@ public class AdminController {
         }
         return response;
     }
-    
+
     @RequestMapping(value = "/commit-product", method = RequestMethod.POST)  // move temp product to main product table
     @ResponseBody
     public TransforDto commitProduct(@RequestBody TransforDto transforDto, HttpServletRequest request, HttpServletResponse response1) {
@@ -524,9 +525,13 @@ public class AdminController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)  // 
     @ResponseBody
-    public String test() {
-
-        return "OK";
+    public List<StatusBean> test() {
+        List<StatusBean> statusBeans = new ArrayList<>();
+        StatusBean statusBean = new StatusBean();
+        statusBean.setId(2003l);
+        statusBeans.add(statusBean);
+        List<StatusBean> beans = productService.loadTempProducts(statusBeans);
+        return beans;
     }
 
 }

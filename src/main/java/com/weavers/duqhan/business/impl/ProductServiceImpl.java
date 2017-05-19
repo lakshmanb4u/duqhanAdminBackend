@@ -1281,7 +1281,7 @@ public class ProductServiceImpl implements ProductService {
             System.out.println("=============================================DATE: " + new Date().toString() + "Product link collection end.....\n Which started on: " + startDate);
             Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, "(==I==)DATE: " + new Date().toString() + "Product link collection end.....\n Which started on: " + startDate);
             String body = "DATE: " + new Date().toString() + "Product link collection end.....\n Which started on: " + startDate;
-            MailSender.sendEmail("krisanu.nandi@pkweb.in", "Error", body, "subhendu.sett@pkweb.in");
+            MailSender.sendEmail("krisanu.nandi@pkweb.in", "Success", body, "subhendu.sett@pkweb.in");
         }
         return statusBeans;
     }
@@ -1341,31 +1341,106 @@ public class ProductServiceImpl implements ProductService {
                             }
                             if (votes > 20.0 && stars > 4.8 && feedback > 4.0) {
                                 detailMain = doc.select(".detail-wrap .product-name");
-                                productBean.setName(detailMain.text().substring(0, Math.min(detailMain.text().length(), 50)));
+                                productBean.setName(detailMain.text());/*.substring(0, Math.min(detailMain.text().length(), 50))*/
 
                                 detailMain = doc.select(".detail-wrap .product-name");
                                 productBean.setDescription(detailMain.text());
 
-                                detailMain = doc.select(".detail-wrap .product-name");
-                                productBean.setDescription(detailMain.text());
+//                                detailMain = doc.select(".detail-wrap .product-name");
+//                                productBean.setDescription(detailMain.text());
+
+                                /**
+                                 ********************************
+                                 * packaging start **************
+                                 */
+                                Double weight = 1.0;
+                                Double width = 1.0;
+                                Double height = 1.0;
+                                Double length = 1.0;
+                                detailMain = doc.select("div#j-product-desc div.pnl-packaging-main ul li.packaging-item");
+                                for (Element element : detailMain) {
+                                    String packagingTitle = element.select("span.packaging-title").text();
+                                    String packagingDesc = element.select("span.packaging-des").text();
+                                    if (packagingTitle.trim().equals("Package Weight:")) {
+                                        String str = packagingDesc;
+                                        str = str.replaceAll("[^.?0-9]+", " ");
+                                        if (Arrays.asList(str.trim().split(" ")) != null) {
+                                            if (!Arrays.asList(str.trim().split(" ")).isEmpty()) {
+                                                try {
+                                                    weight = Double.parseDouble(Arrays.asList(str.trim().split(" ")).get(0));
+                                                } catch (Exception e) {
+                                                }
+                                            }
+                                        }
+                                        System.out.println("weight == " + weight);
+                                    } else if (packagingTitle.trim().equals("Package Size:")) {
+                                        String str = packagingDesc;
+                                        str = str.replaceAll("[^.?0-9]+", " ");
+                                        if (Arrays.asList(str.trim().split(" ")) != null) {
+                                            if (!Arrays.asList(str.trim().split(" ")).isEmpty()) {
+                                                try {
+                                                    width = Double.parseDouble(Arrays.asList(str.trim().split(" ")).get(0));
+                                                    height = Double.parseDouble(Arrays.asList(str.trim().split(" ")).get(1));
+                                                    length = Double.parseDouble(Arrays.asList(str.trim().split(" ")).get(2));
+                                                } catch (Exception e) {
+                                                    width = 1.0;
+                                                    height = 1.0;
+                                                    length = 1.0;
+                                                }
+                                            }
+                                        }
+                                        System.out.println("width == " + width);
+                                        System.out.println("height == " + height);
+                                        System.out.println("length == " + length);
+                                    }
+                                }
+                                /**
+                                 **************************
+                                 * packaging start ********
+                                 */
 
                                 productBean.setVendorId(3l);//??????????????????????
+                                /**
+                                 **************************
+                                 * Category start ********
+                                 */
                                 detailMain = doc.select("div.ui-breadcrumb div.container a");
-                                String newCategory = detailMain.last().text();
-                                System.out.println("newCategory == " + newCategory);
-                                Category category = categoryDao.getCategoryByName(newCategory);
-                                if (category != null) {
-                                    productBean.setCategoryId(category.getId());
-                                } else {
-                                    Category parentCategory = categoryDao.getCategoryByName("Jewellery");
-                                    category = new Category();
-                                    category.setId(null);
-                                    category.setName(newCategory);
-                                    category.setParentId(parentCategory.getId());
-                                    category.setParentPath(parentCategory.getParentPath() + parentCategory.getId() + "=");
-                                    Category category2 = categoryDao.save(category);
-                                    productBean.setCategoryId(category2.getId());
+                                String thisCategory = detailMain.last().text().trim();
+                                System.out.println("thisCategory == " + thisCategory);
+                                Category parentCategory = new Category();
+                                for (Element element : detailMain) {
+                                    String newCategory;
+                                    newCategory = element.text().trim();
+                                    System.out.println("newCategory======" + newCategory);
+                                    if (newCategory.equals("Home") || newCategory.equals("All Categories") || newCategory.equals("Jewelry & Accessories")) {
+                                        if (newCategory.equals("Jewelry & Accessories")) {
+                                            parentCategory = categoryDao.getCategoryByName("Jewellery");
+                                        }
+                                    } else {
+                                        Category category = categoryDao.getCategoryByName(newCategory);
+                                        if (category != null) {
+                                            if (category.getName().equals(thisCategory)) {
+                                                productBean.setCategoryId(category.getId());
+                                            }
+                                            parentCategory = category;
+                                        } else {
+                                            category = new Category();
+                                            category.setId(null);
+                                            category.setName(newCategory);
+                                            category.setParentId(parentCategory.getId());
+                                            category.setParentPath(parentCategory.getParentPath() + parentCategory.getId() + "=");
+                                            Category category2 = categoryDao.save(category);
+                                            if (category.getName().equals(thisCategory)) {
+                                                productBean.setCategoryId(category2.getId());
+                                            }
+                                            parentCategory = category2;
+                                        }
+                                    }
                                 }
+                                /**
+                                 **************************
+                                 * Category end ********
+                                 */
 
                                 productBean.setExternalLink(url);
 
@@ -1487,10 +1562,10 @@ public class ProductServiceImpl implements ProductService {
                                     sizeColorMapDto.setSalesPrice(discountPrice);
                                     sizeColorMapDto.setOrginalPrice(actualPrice);
                                     sizeColorMapDto.setCount(1l);
-                                    sizeColorMapDto.setProductWidth(1.0);
-                                    sizeColorMapDto.setProductLength(1.0);
-                                    sizeColorMapDto.setProductWeight(1.0);
-                                    sizeColorMapDto.setProductHeight(1.0);
+                                    sizeColorMapDto.setProductWidth(width);
+                                    sizeColorMapDto.setProductLength(length);
+                                    sizeColorMapDto.setProductWeight(weight);
+                                    sizeColorMapDto.setProductHeight(height);
                                     sizeColorMapDtos.add(sizeColorMapDto);
                                 }
                                 productBean.setSizeColorMaps(sizeColorMapDtos);
@@ -1790,25 +1865,18 @@ public class ProductServiceImpl implements ProductService {
 //        System.out.println("markupPrice = " + markupPrice);
 //        System.out.println("dddddd = " + Math.ceil(57.50 / 10) * 10);
 
-            Document doc = Jsoup.connect("https://www.aliexpress.com/item/New-Long-Dangle-Earrings-for-Women-Female-Boucle-d-oreille-Fluffy-Pom-Pom-Balls-Drop-Earring/32800541803.html?spm=2114.01010108.3.219.rCW0za&ws_ab_test=searchweb0_0,searchweb201602_5_10152_10065_10151_10068_10084_10083_10080_10082_10081_10110_10136_10137_10111_10060_10138_10112_10113_10062_10156_10114_10153_10141_126_10056_10055_10054_10059_10099_10078_10079_10103_10073_10102_10096_10070_10148_10123_10147_10052_10053_10124_10142_10107_10050_10143_10051-10136,searchweb201603_4,afswitch_1,ppcSwitch_7&btsid=5836021c-526a-4e08-8ae3-2507777081b7&algo_expid=c753f2cb-bc35-4656-8527-1798327ff595-24&algo_pvid=c753f2cb-bc35-4656-8527-1798327ff595").get();
+            Document doc = Jsoup.connect("https://www.aliexpress.com/item/New-Arrivals-15-cols-cheaper-PU-Leather-snap-button-bracelet-fit-18mm-button-armband-jewelry-snap/32731049072.html?spm=2114.01010108.3.9.ozcX84&ws_ab_test=searchweb0_0,searchweb201602_5_10152_10065_10151_10068_5010016_10136_10137_10157_10060_10138_10155_10062_10156_437_10154_10056_10055_10054_10059_303_100031_10099_10103_10102_10096_10147_10052_10053_10107_10050_10142_10051_10084_10083_10119_10080_10082_10081_10110_519_10175_10111_10112_10113_10114_10181_10183_10182_10185_10078_10079_10077_10073_10123_10120_142-10119,searchweb201603_2,ppcSwitch_7&btsid=d4786785-2aa3-4560-9011-107b40d72476&algo_expid=c7433b8e-bef7-42b1-8e99-0ea3cfc2e781-1&algo_pvid=c7433b8e-bef7-42b1-8e99-0ea3cfc2e781").get();
 
-            Elements detailMain = doc.select(".rantings-num");
-            if (!detailMain.isEmpty()) {
-                System.out.println("vote = " + Double.valueOf(detailMain.text().split(" votes")[0].split("\\(")[1]));
-            }
-            detailMain = doc.select(".percent-num");
-            if (!detailMain.isEmpty()) {
-                System.out.println("star = " + Double.valueOf(detailMain.text()));
-            }
-            detailMain = doc.select("ul.ui-tab-nav li[data-trigger='feedback'] a");
-            if (!detailMain.isEmpty()) {
-                System.out.println("feedback = " + Double.valueOf(detailMain.text().split("\\(")[1].split("\\)")[0]));
-            }
-
+            Elements detailMain;
+            detailMain = doc.select(".description-content");
+                System.out.println("detailMain "+doc.text());
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
 }
+/*Unit Type:======piece
+Package Weight:======0.1kg (0.22lb.)
+Package Size:======10cm x 10cm x 10cm (3.94in x 3.94in x 3.94in)*/
