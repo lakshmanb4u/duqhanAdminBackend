@@ -58,6 +58,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
@@ -1228,46 +1229,48 @@ public class ProductServiceImpl implements ProductService {
         Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, "(==I==)DATE: " + startDate + "Product link collection start.....\n For the link ( " + link + " )");
         Elements productUrlList = null;
         List<StatusBean> statusBeans = new ArrayList<>();
-        Elements nexturl = null;
+//        Elements nexturl = null;
         boolean contd = true;
         String productList = link /*"https://www.aliexpress.com/wholesale?minPrice=&maxPrice=&isBigSale=n&isFreeShip=y&isFavorite=all&isMobileExclusive=n&isLocalReturn=n&shipFromCountry=&shipCompanies=&SearchText=jwelry+for+women&CatId=1509&g=y&initiative_id=SB_20170330225112&needQuery=n&isrefine=y"*/;
         Temtproductlinklist temtproductlinklist;
         Temtproductlinklist savedTemtproductlinklist;
+        String nexturl = null;
+        String firstPart = null;
+        String secondPart = null;
+        int[] pageNumber = new int[999];
+        for (int i = 0; i < 999; i++) {
+            pageNumber[i] = (1 + (int) (Math.random() * 1000));
+        }
         try {
-            while (contd) {
-                Document doc = Jsoup.connect(productList).get();
-//                productUrlList = doc.select("#hs-below-list-items .list-item .pic a[href]");//for search page
-                productUrlList = doc.select(".son-list .list-item .pic a[href]");
-//                productInfo = doc.select("#hs-below-list-items .list-item .info");
-                for (Element element : productUrlList) {
-                    temtproductlinklist = temtproductlinklistDao.getTemtproductlinklistByLink(element.attr("abs:href"));
-                    if (temtproductlinklist == null) {
-                        StatusBean statusBean = new StatusBean();
-                        temtproductlinklist = new Temtproductlinklist();
-                        temtproductlinklist.setLink(element.attr("abs:href"));
-                        temtproductlinklist.setStatus(0);
+            Document doc = Jsoup.connect(productList).get();
+            productUrlList = doc.select("div.ui-pagination-navi a");
+            if (!productUrlList.isEmpty()) {
+                nexturl = productUrlList.get(0).attr("abs:href");
+                firstPart = nexturl.split(".html")[0];
+                firstPart = firstPart.substring(0, firstPart.length() - 1);
+                secondPart = nexturl.split(".html")[1];
+                secondPart = ".html" + secondPart;
+                for (int i = 0; i < 999; i++) {
+                    nexturl = firstPart + pageNumber[i] + secondPart;
+                    doc = Jsoup.connect(nexturl).get();
+                    productUrlList = doc.select(".son-list .list-item .pic a[href]");
+                    if (!productUrlList.isEmpty()) {
+                        for (Element element : productUrlList) {
+                            temtproductlinklist = temtproductlinklistDao.getTemtproductlinklistByLink(element.attr("abs:href"));
+                            if (temtproductlinklist == null) {
+                                StatusBean statusBean = new StatusBean();
+                                temtproductlinklist = new Temtproductlinklist();
+                                temtproductlinklist.setLink(element.attr("abs:href"));
+                                temtproductlinklist.setStatus(0);
 //                    System.out.println("element.toString()" + element.attr("abs:href"));
-                        savedTemtproductlinklist = temtproductlinklistDao.save(temtproductlinklist);
-                        statusBean.setStatus(String.valueOf(savedTemtproductlinklist.getStatus()));
-                        statusBean.setStatusCode(savedTemtproductlinklist.getLink());
-                        statusBean.setId(savedTemtproductlinklist.getId());
-                        statusBeans.add(statusBean);
+                                savedTemtproductlinklist = temtproductlinklistDao.save(temtproductlinklist);
+                                statusBean.setStatus(String.valueOf(savedTemtproductlinklist.getStatus()));
+                                statusBean.setStatusCode(savedTemtproductlinklist.getLink());
+                                statusBean.setId(savedTemtproductlinklist.getId());
+                                statusBeans.add(statusBean);
+                            }
+                        }
                     }
-                }
-                nexturl = doc.select(".ui-pagination-next");
-//                System.out.println("nexturl" + nexturl.toString());
-                if (nexturl.hasClass("page-next")) {
-                    productList = nexturl.attr("abs:href");
-                    System.out.println("productList == " + productList);
-                } else if (nexturl.hasClass("page-end")) {
-                    System.out.println("productList2 ==== ");
-                    contd = false;
-                } else {
-                    System.out.println("(=============================================)DATE: " + new Date().toString() + "Product link collection get exception.....\nNext link not found.\n Which started on: " + startDate);
-                    Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, "(==E==)DATE: " + new Date().toString() + "Product link collection get exception.....\nNext link not found.\n Which started on: " + startDate);
-                    contd = false;
-                    String body = "DATE: " + new Date().toString() + "Product link collection get exception.....\nNext link not found.\n Which started on: " + startDate;
-                    MailSender.sendEmail("krisanu.nandi@pkweb.in", "Error", body, "subhendu.sett@pkweb.in");
                 }
             }
         } catch (Exception ex) {
@@ -1286,6 +1289,87 @@ public class ProductServiceImpl implements ProductService {
         return statusBeans;
     }
 
+    /*@Override
+    public List<StatusBean> getTempProducts(String link) {
+        boolean status = true;  //success
+        String startDate = new Date().toString();
+        Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, "(==I==)DATE: " + startDate + "Product link collection start.....\n For the link ( " + link + " )");
+        Elements productUrlList = null;
+        List<StatusBean> statusBeans = new ArrayList<>();
+        String nexturl = null;
+        String firstPart = null;
+        String secondPart = null;
+        boolean contd = true;
+        String productList = link ;
+        Temtproductlinklist temtproductlinklist;
+        Temtproductlinklist savedTemtproductlinklist;
+        int[] pageNumber = new int[999];
+        for (int i = 0; i < 999; i++) {
+            pageNumber[i] = (1 + (int) (Math.random() * 1000));
+        }
+        try {
+            Document doc = Jsoup.connect(productList).get();
+//                productUrlList = doc.select("#hs-below-list-items .list-item .pic a[href]");//for search page
+            productUrlList = doc.select(".son-list .list-item .pic a[href]");
+            if (productUrlList.isEmpty()) {
+                //////////
+            } else {
+                nexturl = productUrlList.get(0).attr("abs:href");
+                firstPart = nexturl.split(".html")[0];
+                firstPart = firstPart.substring(0, firstPart.length() - 1);
+                secondPart = nexturl.split(".html")[1];
+                secondPart = ".html" + secondPart;
+                for (int i = 1; i <= 999; i++) {
+                    nexturl = firstPart + i + secondPart;
+                    doc = Jsoup.connect(nexturl).get();
+                    productUrlList = doc.select(".ui-pagination-next");
+                    if (!productUrlList.isEmpty()) {
+                        temtproductlinklist = temtproductlinklistDao.getTemtproductlinklistByLink(nexturl);
+                        if (temtproductlinklist == null) {
+                            StatusBean statusBean = new StatusBean();
+                            temtproductlinklist = new Temtproductlinklist();
+                            temtproductlinklist.setLink(nexturl);
+                            temtproductlinklist.setStatus(0);
+//                    System.out.println("element.toString()" + element.attr("abs:href"));
+                            savedTemtproductlinklist = temtproductlinklistDao.save(temtproductlinklist);
+                            statusBean.setStatus(String.valueOf(savedTemtproductlinklist.getStatus()));
+                            statusBean.setStatusCode(savedTemtproductlinklist.getLink());
+                            statusBean.setId(savedTemtproductlinklist.getId());
+                            statusBeans.add(statusBean);
+                        }
+                    }
+                    nexturl = doc.select(".ui-pagination-next");
+//                System.out.println("nexturl" + nexturl.toString());
+                    if (nexturl.hasClass("page-next")) {
+                        productList = nexturl.attr("abs:href");
+                        System.out.println("productList == " + productList);
+                    } else if (nexturl.hasClass("page-end")) {
+                        System.out.println("productList2 ==== ");
+                        contd = false;
+                    } else {
+                        System.out.println("(=============================================)DATE: " + new Date().toString() + "Product link collection get exception.....\nNext link not found.\n Which started on: " + startDate);
+                        Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, "(==E==)DATE: " + new Date().toString() + "Product link collection get exception.....\nNext link not found.\n Which started on: " + startDate);
+                        contd = false;
+                        String body = "DATE: " + new Date().toString() + "Product link collection get exception.....\nNext link not found.\n Which started on: " + startDate;
+                        MailSender.sendEmail("krisanu.nandi@pkweb.in", "Error", body, "subhendu.sett@pkweb.in");
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            status = false; //failure
+            System.out.println("(=============================================)DATE: " + new Date().toString() + "Product link collection get exception.....\n Which started on: " + startDate + "\n" + ex.getLocalizedMessage());
+            Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, "(==E==)DATE: " + new Date().toString() + "Product link collection get exception.....\n Which started on: " + startDate + "\n", ex);
+            String body = "DATE: " + new Date().toString() + "Product link collection get exception.....\nNext link not found.\n Which started on: " + startDate;
+            MailSender.sendEmail("krisanu.nandi@pkweb.in", "Error", body, "subhendu.sett@pkweb.in");
+        }
+        if (status) {
+            System.out.println("=============================================DATE: " + new Date().toString() + "Product link collection end.....\n Which started on: " + startDate);
+            Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, "(==I==)DATE: " + new Date().toString() + "Product link collection end.....\n Which started on: " + startDate);
+            String body = "DATE: " + new Date().toString() + "Product link collection end.....\n Which started on: " + startDate;
+            MailSender.sendEmail("krisanu.nandi@pkweb.in", "Success", body, "subhendu.sett@pkweb.in");
+        }
+        return statusBeans;
+    }*/
     @Override
     public List<StatusBean> getTempProductList(int start, int limit) {
 //        List<Temtproductlinklist> temtproductlinklists = temtproductlinklistDao.getUnprocessedTempProduct();
@@ -1348,7 +1432,6 @@ public class ProductServiceImpl implements ProductService {
 
 //                                detailMain = doc.select(".detail-wrap .product-name");
 //                                productBean.setDescription(detailMain.text());
-
                                 /**
                                  ********************************
                                  * packaging start **************
@@ -1853,8 +1936,8 @@ public class ProductServiceImpl implements ProductService {
 
     public static void main(String[] args) {
 
-        try {
-            //        double discountPrice = 50.045663699;
+//        try {
+        //        double discountPrice = 50.045663699;
 //        double actualPrice = 100.04563978;
 //        double markupPrice = 0.0;
 //        markupPrice = discountPrice * 0.15 + 100;
@@ -1865,18 +1948,59 @@ public class ProductServiceImpl implements ProductService {
 //        System.out.println("markupPrice = " + markupPrice);
 //        System.out.println("dddddd = " + Math.ceil(57.50 / 10) * 10);
 
-            Document doc = Jsoup.connect("https://www.aliexpress.com/item/New-Arrivals-15-cols-cheaper-PU-Leather-snap-button-bracelet-fit-18mm-button-armband-jewelry-snap/32731049072.html?spm=2114.01010108.3.9.ozcX84&ws_ab_test=searchweb0_0,searchweb201602_5_10152_10065_10151_10068_5010016_10136_10137_10157_10060_10138_10155_10062_10156_437_10154_10056_10055_10054_10059_303_100031_10099_10103_10102_10096_10147_10052_10053_10107_10050_10142_10051_10084_10083_10119_10080_10082_10081_10110_519_10175_10111_10112_10113_10114_10181_10183_10182_10185_10078_10079_10077_10073_10123_10120_142-10119,searchweb201603_2,ppcSwitch_7&btsid=d4786785-2aa3-4560-9011-107b40d72476&algo_expid=c7433b8e-bef7-42b1-8e99-0ea3cfc2e781-1&algo_pvid=c7433b8e-bef7-42b1-8e99-0ea3cfc2e781").get();
+        /*Document doc = Jsoup.connect("https://www.aliexpress.com/item/New-Arrivals-15-cols-cheaper-PU-Leather-snap-button-bracelet-fit-18mm-button-armband-jewelry-snap/32731049072.html?spm=2114.01010108.3.9.ozcX84&ws_ab_test=searchweb0_0,searchweb201602_5_10152_10065_10151_10068_5010016_10136_10137_10157_10060_10138_10155_10062_10156_437_10154_10056_10055_10054_10059_303_100031_10099_10103_10102_10096_10147_10052_10053_10107_10050_10142_10051_10084_10083_10119_10080_10082_10081_10110_519_10175_10111_10112_10113_10114_10181_10183_10182_10185_10078_10079_10077_10073_10123_10120_142-10119,searchweb201603_2,ppcSwitch_7&btsid=d4786785-2aa3-4560-9011-107b40d72476&algo_expid=c7433b8e-bef7-42b1-8e99-0ea3cfc2e781-1&algo_pvid=c7433b8e-bef7-42b1-8e99-0ea3cfc2e781").get();
 
             Elements detailMain;
-            detailMain = doc.select(".description-content");
-                System.out.println("detailMain "+doc.text());
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            TimeUnit.SECONDS.sleep(20);
+            detailMain = doc.select(".ui-box.product-description-main p span");
+//            TimeUnit.SECONDS.sleep(30);*/
+        boolean status = true;  //success
+        String startDate = new Date().toString();
+        Elements productUrlList = null;
+        List<StatusBean> statusBeans = new ArrayList<>();
+//        Elements nexturl = null;
+        boolean contd = true;
+        String productList = "https://www.aliexpress.com/category/200000102/cuff-bracelets.html?spm=2114.20010608.3.35.EJMIGB&site=glo&tc=af&g=y";
+        Temtproductlinklist temtproductlinklist;
+        Temtproductlinklist savedTemtproductlinklist;
+        String nexturl = null;
+        String firstPart = null;
+        String secondPart = null;
+        int[] pageNumber = new int[999];
+        for (int i = 0; i < 999; i++) {
+            pageNumber[i] = (1 + (int) (Math.random() * 1000));
         }
+        try {
+            Document doc = Jsoup.connect(productList).get();
+            productUrlList = doc.select("div.ui-pagination-navi a");
+            if (!productUrlList.isEmpty()) {
+                nexturl = productUrlList.get(0).attr("abs:href");
+                firstPart = nexturl.split(".html")[0];
+                firstPart = firstPart.substring(0, firstPart.length() - 1);
+                secondPart = nexturl.split(".html")[1];
+                secondPart = ".html" + secondPart;
+                for (int i = 0; i < 999; i++) {
+                    nexturl = firstPart + pageNumber[i] + secondPart;
+                    System.out.println("nexturl = " + nexturl);
+                    doc = Jsoup.connect(nexturl).get();
+                    productUrlList = doc.select(".son-list .list-item .pic a[href]");
+                    if (!productUrlList.isEmpty()) {
+                        for (Element element : productUrlList) {
+                            System.out.println("element.attr(\"abs:href\")==" + element.attr("abs:href"));
+                        }
+                    }
+                }
+            }else{
+                System.out.println("ggggggggggg");
+            }
 
+        } catch (Exception ex) {
+            System.out.println("ex===="+ex.getLocalizedMessage());
+        }
     }
-
 }
+
+
 /*Unit Type:======piece
 Package Weight:======0.1kg (0.22lb.)
 Package Size:======10cm x 10cm x 10cm (3.94in x 3.94in x 3.94in)*/
