@@ -1392,9 +1392,10 @@ public class ProductServiceImpl implements ProductService {
         Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, "(==I==)DATE: " + startDate + "Store product details in temp product table start.....");
         try {
 //        List<Temtproductlinklist> temtproductlinklists = temtproductlinklistDao.getUnprocessedTempProduct();
-            String status = "failure";
+            String status = "Link not founf";
             for (StatusBean statusBean : statusBeans) {
-                status = "failure";
+                status = "Link not founf";
+                TimeUnit.SECONDS.sleep(1 + (int) (Math.random() * 100));
                 Temtproductlinklist temtproductlinklist = temtproductlinklistDao.loadById(statusBean.getId());
                 if (temtproductlinklist != null && temtproductlinklist.getStatus() == 0) {
                     TempProduct tempProduct = tempProductDao.getProductByExternelLink(temtproductlinklist.getLink());
@@ -1411,6 +1412,8 @@ public class ProductServiceImpl implements ProductService {
                         try {
                             productBean = new ProductBean();
                             Document doc = Jsoup.connect(url).get();
+                            System.out.println("doc.title == " + doc.title());
+                            System.out.println("doc.html == " + doc.html());
                             detailMain = doc.select(".rantings-num");
                             if (!detailMain.isEmpty()) {
                                 votes = Double.valueOf(detailMain.text().split(" votes")[0].split("\\(")[1]);
@@ -1452,6 +1455,7 @@ public class ProductServiceImpl implements ProductService {
                                                 try {
                                                     weight = Double.parseDouble(Arrays.asList(str.trim().split(" ")).get(0));
                                                 } catch (Exception e) {
+                                                    weight = 1.0;
                                                 }
                                             }
                                         }
@@ -1479,10 +1483,10 @@ public class ProductServiceImpl implements ProductService {
                                 }
                                 /**
                                  **************************
-                                 * packaging start ********
+                                 * packaging end ********
                                  */
 
-                                productBean.setVendorId(3l);//??????????????????????
+                                productBean.setVendorId(1l);//??????????????????????
                                 /**
                                  **************************
                                  * Category start ********
@@ -1679,7 +1683,10 @@ public class ProductServiceImpl implements ProductService {
                                 status = "criteria mismatch";
                             }
                         } catch (Exception ex) {
+                            temtproductlinklist.setStatus(4);//
+                            temtproductlinklistDao.save(temtproductlinklist);
                             System.out.println("Exception === " + ex);
+                            status = "failure";
                             Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, "(==E==)DATE: " + new Date().toString() + "Store product details in temp product table get error in sub process.....\n Link Id: " + statusBean.getId() + "\n Started on" + startDate, ex);
                         }
                     } else {
@@ -1990,12 +1997,12 @@ public class ProductServiceImpl implements ProductService {
                         }
                     }
                 }
-            }else{
+            } else {
                 System.out.println("ggggggggggg");
             }
 
         } catch (Exception ex) {
-            System.out.println("ex===="+ex.getLocalizedMessage());
+            System.out.println("ex====" + ex.getLocalizedMessage());
         }
     }
 }
