@@ -1392,10 +1392,10 @@ public class ProductServiceImpl implements ProductService {
         Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, "(==I==)DATE: " + startDate + "Store product details in temp product table start.....");
         try {
 //        List<Temtproductlinklist> temtproductlinklists = temtproductlinklistDao.getUnprocessedTempProduct();
-            String status = "Link not founf";
+            String status = "Link not found";
             for (StatusBean statusBean : statusBeans) {
-                status = "Link not founf";
-                TimeUnit.SECONDS.sleep(1 + (int) (Math.random() * 100));
+                status = "Link not found";
+                TimeUnit.SECONDS.sleep(60 + (int) (Math.random() * 100));
                 Temtproductlinklist temtproductlinklist = temtproductlinklistDao.loadById(statusBean.getId());
                 if (temtproductlinklist != null && temtproductlinklist.getStatus() == 0) {
                     TempProduct tempProduct = tempProductDao.getProductByExternelLink(temtproductlinklist.getLink());
