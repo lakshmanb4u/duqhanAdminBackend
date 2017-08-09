@@ -6,6 +6,7 @@
 package com.weavers.duqhan.dao.jpa;
 
 import com.weavers.duqhan.dao.TemtproductlinklistDao;
+import com.weavers.duqhan.domain.TempProduct;
 import com.weavers.duqhan.domain.Temtproductlinklist;
 import java.util.List;
 import javax.persistence.NoResultException;
@@ -45,6 +46,12 @@ public class TemtproductlinklistDaoJpa extends BaseDaoJpa<Temtproductlinklist> i
         } catch (NonUniqueResultException nure) {
             return new Temtproductlinklist();
         }
+    }
+
+    @Override
+    public List<TempProduct> test() {
+        Query query = getEntityManager().createQuery("SELECT tp FROM TempProduct AS tp WHERE tp.id NOT IN(SELECT m.productId FROM TempProductSizeColorMap AS m GROUP BY m.productId)");
+        return query.getResultList();
     }
 
 }

@@ -20,6 +20,7 @@
     <bean id="colorDao" class="com.weavers.duqhan.dao.jpa.ColorDaoJpa" />
     <bean id="sizeGroupDao" class="com.weavers.duqhan.dao.jpa.SizeGroupDaoJpa" />
     <bean id="specificationDao" class="com.weavers.duqhan.dao.jpa.SpecificationDaoJpa" />
+    <bean id="cartDao" class="com.weavers.duqhan.dao.jpa.CartDaoJpa" />
     
     <bean id="temtproductlinklistDao" class="com.weavers.duqhan.dao.jpa.TemtproductlinklistDaoJpa" />
     <bean id="tempProductDao" class="com.weavers.duqhan.dao.jpa.TempProductDaoJpa" />
@@ -56,13 +57,13 @@
         
         <!-- Local Configuration -->
     
-<!--        <property name="url" value="jdbc:mysql://localhost:3306/duqhandb" />
+<!--                <property name="url" value="jdbc:mysql://localhost:3306/duqhandb" />
         <property name="username" value="root" />
         <property name="password" value="" /> -->
     
         <!-- Server Configuration -->
         
-                <property name="url" value="jdbc:mysql://aa168jeiyp7tfdz.chrj0eff2nnw.us-west-2.rds.amazonaws.com:3306/duqhandb" />
+        <property name="url" value="jdbc:mysql://duqhandb.c1mlv6dykivx.us-east-1.rds.amazonaws.com:3306/duqhandb" />
         <property name="username" value="duqhunDbAdmin" />
         <property name="password" value="wgJncDU2M-=vMkEU" />
         

@@ -22,6 +22,22 @@ public class ProductSizeColorMapDaoJpa extends BaseDaoJpa<ProductSizeColorMap> i
     }
 
     @Override
+    public List<ProductSizeColorMap> loadByIds(List<Long> ids) {
+        String q = "SELECT map FROM ProductSizeColorMap AS map where map.id in (";
+        int i = 0;
+        String s = "";
+        for (Long id : ids) {
+            s = s + (i == 0 ? "" : ",") + ":id" + i++;
+        }
+        Query query = getEntityManager().createQuery(q + s + ")");
+        i = 0;
+        for (Long id : ids) {
+            query.setParameter("id" + i++, id);
+        }
+        return query.getResultList();
+    }
+    
+    @Override
     public HashMap<Long, ProductSizeColorMap> getSizeColorMapbyMinPriceIfAvailable(List<Long> productIds) {
         HashMap<Long, ProductSizeColorMap> mapSizeColorMap = new HashMap<>();
         if (!productIds.isEmpty()) {

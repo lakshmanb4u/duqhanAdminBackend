@@ -10,6 +10,7 @@ import com.weavers.duqhan.dto.AddressDto;
 import com.weavers.duqhan.dto.AouthBean;
 import com.weavers.duqhan.dto.LoginBean;
 import javax.servlet.http.HttpSession;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -24,6 +25,10 @@ public interface AdminService {
     String invalidatedToken(String email, String token);
 
     DuqhanAdmin getUserByToken(String token);
-    
+
     public String saveVendor(AddressDto addressDto);
+
+    String uploadProductImage(Long productId, MultipartFile file);
+
+    void deleteProductImage(String oldImgUrl);
 }

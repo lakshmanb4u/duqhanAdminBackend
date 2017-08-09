@@ -72,6 +72,14 @@ public class TempProduct extends BaseDomain {
     @Size(max = 65535)
     @Column(name = "specifications")
     private String specifications;
+    @Column(name = "votes")
+    private Double votes;
+    @Column(name = "stars")
+    private Double stars;
+    @Column(name = "feedback")
+    private Double feedback;
+    @Column(name = "status")
+    private int status;
 
     public String getName() {
         return name;
@@ -159,5 +167,37 @@ public class TempProduct extends BaseDomain {
 
     public void setSpecifications(String specifications) {
         this.specifications = specifications;
+    }
+
+    public Double getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Double votes) {
+        this.votes = votes;
+    }
+
+    public Double getStars() {
+        return stars;
+    }
+
+    public void setStars(Double stars) {
+        this.stars = stars;
+    }
+
+    public Double getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(Double feedback) {
+        this.feedback = feedback;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

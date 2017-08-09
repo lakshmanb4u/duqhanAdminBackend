@@ -13,11 +13,13 @@ import com.weavers.duqhan.domain.Vendor;
 import com.weavers.duqhan.dto.AddressDto;
 import com.weavers.duqhan.dto.AouthBean;
 import com.weavers.duqhan.dto.LoginBean;
+import com.weavers.duqhan.util.GoogleBucketFileUploader;
 import com.weavers.duqhan.util.RandomCodeGenerator;
 import java.util.Calendar;
 import java.util.Date;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -113,6 +115,20 @@ public class AdminServiceImpl implements AdminService {
             return "ERROR: Vendor can not be saved!!";
         } else {
             return "Vendor saved..";
+        }
+    }
+
+    @Override
+    public String uploadProductImage(Long productId, MultipartFile file) {
+        String imgUrl = GoogleBucketFileUploader.uploadProductImage(file, productId);
+        return imgUrl;
+    }
+
+    @Override
+    public void deleteProductImage(String oldImgUrl) {
+        if (oldImgUrl != null && oldImgUrl.contains("duqhan-images/")) {
+            String imgName = oldImgUrl.split("duqhan-images/")[1];
+            GoogleBucketFileUploader.deleteProductImg(imgName);
         }
     }
 

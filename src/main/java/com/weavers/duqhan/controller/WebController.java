@@ -11,6 +11,7 @@ import com.weavers.duqhan.dto.AouthBean;
 import com.weavers.duqhan.dto.LoginBean;
 import com.weavers.duqhan.dto.StatusBean;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,16 +49,31 @@ public class WebController {
         return userBean;
     }
 
-    @RequestMapping(value = "/testom", method = RequestMethod.GET) // open home page
+    @RequestMapping(value = "/testom", method = RequestMethod.GET) // Load temp product from list
     @ResponseBody
-    public List<StatusBean> testom(@RequestParam int start,@RequestParam int limit) {
+    public String testom(@RequestParam int start,@RequestParam int limit) {
         List<StatusBean> statusBeans = new ArrayList<>();
-        for (int i = 0; i < limit; i++) {
+        for (int i = start; i < start+limit; i++) {
             StatusBean bean = new StatusBean();
-            bean.setId((start + (long) (Math.random() * limit)));
+            bean.setId(Long.valueOf(i));
             statusBeans.add(bean);
         }
-        return productService.loadTempProducts(statusBeans);
+        Collections.shuffle(statusBeans);
+        productService.loadTempProducts(statusBeans);
+        return "wait'n watch..";
+    }
+    
+    @RequestMapping(value = "/test-commit", method = RequestMethod.GET) // Move temp product to main product
+    @ResponseBody
+    public String testomCommit(@RequestParam int start,@RequestParam int limit) {
+        List<StatusBean> statusBeans = new ArrayList<>();
+        for (int i = start; i < start+limit; i++) {
+            StatusBean bean = new StatusBean();
+            bean.setId(Long.valueOf(i));
+            statusBeans.add(bean);
+        }
+        productService.moveTempProductToProduct(statusBeans);
+        return "wait'n watch..";
     }
 
 }

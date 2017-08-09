@@ -78,6 +78,9 @@ public class ProductBean {
     private HashMap<String, String> specificationsMap;
     private String statusCode;
     private String status;
+    private Double votes;
+    private Double stars;
+    private Double feedback;
 
     /**
      * @return the productId
@@ -525,6 +528,48 @@ public class ProductBean {
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    /**
+     * @return the votes
+     */
+    public Double getVotes() {
+        return votes;
+    }
+
+    /**
+     * @param votes the votes to set
+     */
+    public void setVotes(Double votes) {
+        this.votes = votes;
+    }
+
+    /**
+     * @return the stars
+     */
+    public Double getStars() {
+        return stars;
+    }
+
+    /**
+     * @param stars the stars to set
+     */
+    public void setStars(Double stars) {
+        this.stars = stars;
+    }
+
+    /**
+     * @return the feedback
+     */
+    public Double getFeedback() {
+        return feedback;
+    }
+
+    /**
+     * @param feedback the feedback to set
+     */
+    public void setFeedback(Double feedback) {
+        this.feedback = feedback;
     }
 
 }

@@ -14,6 +14,7 @@ import com.weavers.duqhan.dto.SizeDto;
 import com.weavers.duqhan.dto.SpecificationDto;
 import com.weavers.duqhan.dto.StatusBean;
 import java.util.List;
+import org.springframework.scheduling.annotation.Async;
 
 /**
  *
@@ -65,7 +66,9 @@ public interface ProductService {
 
     List<StatusBean> getTempProductList(int start, int limit);
 
-    List<StatusBean> loadTempProducts(List<StatusBean> statusBeans);
+    @Async
+//    List<StatusBean> loadTempProducts(List<StatusBean> statusBeans);
+    void loadTempProducts(List<StatusBean> statusBeans);
 
     ProductBeans getAllTempProductsIncloudeZeroAvailable(int start, int limit);
 
@@ -75,7 +78,9 @@ public interface ProductService {
 
     String updateTempProductInventory(ProductBean productBean);
 
-    List<StatusBean> moveTempProductToProduct(List<StatusBean> statusBeans);
+//    List<StatusBean> moveTempProductToProduct(List<StatusBean> statusBeans);
+    @Async
+    void moveTempProductToProduct(List<StatusBean> statusBeans);
 
     //**************************************************
     /*ColorAndSizeDto getColorSizeList();

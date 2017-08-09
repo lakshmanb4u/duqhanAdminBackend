@@ -15,6 +15,8 @@ import java.util.List;
  */
 public interface ProductSizeColorMapDao extends BaseDao<ProductSizeColorMap>{
     
+    List<ProductSizeColorMap> loadByIds(List<Long> ids);
+    
     HashMap<Long, ProductSizeColorMap> getSizeColorMapbyMinPriceIfAvailable(List<Long> productIds);
     
     HashMap<Long, ProductSizeColorMap> getSizeColorMapbyMinPriceRecentView(List<Long> productIds);
