@@ -165,5 +165,4 @@ public class ShipmentTable extends BaseDomain {
     public void setPayKey(String payKey) {
         this.payKey = payKey;
     }
-
 }

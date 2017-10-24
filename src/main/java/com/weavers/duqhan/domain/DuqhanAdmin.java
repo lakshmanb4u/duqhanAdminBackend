@@ -99,5 +99,4 @@ public class DuqhanAdmin extends BaseDomain {
     public void setValidTill(Date validTill) {
         this.validTill = validTill;
     }
-
 }

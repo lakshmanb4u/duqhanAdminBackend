@@ -10,26 +10,20 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  *
- * @author Android-3
+ * @author weaversAndroid
  */
 @Entity
-@Table(name = "product_img")
-public class ProductImg extends BaseDomain {
+@Table(name = "offer_products")
+public class OfferProducts extends BaseDomain {
 
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @NotNull
     @Column(name = "product_id")
     private long productId;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "img_url")
-    private String imgUrl;
 
     public long getProductId() {
         return productId;
@@ -37,14 +31,6 @@ public class ProductImg extends BaseDomain {
 
     public void setProductId(long productId) {
         this.productId = productId;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
     }
 
 }

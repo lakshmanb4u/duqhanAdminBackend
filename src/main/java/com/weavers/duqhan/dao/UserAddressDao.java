@@ -5,11 +5,12 @@
  */
 package com.weavers.duqhan.dao;
 
-import com.weavers.duqhan.domain.Cart;
+import com.weavers.duqhan.domain.UserAddress;
 
 /**
  *
- * @author Android-3
+ * @author weaversAndroid
  */
-public interface CartDao extends BaseDao<Cart> {
+public interface UserAddressDao extends BaseDao<UserAddress>{
+    
 }

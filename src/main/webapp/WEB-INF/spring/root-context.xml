@@ -13,25 +13,22 @@
     <bean id="duqhanAdminDao" class="com.weavers.duqhan.dao.jpa.DuqhanAdminDaoJpa" />
     <bean id="vendorDao" class="com.weavers.duqhan.dao.jpa.VendorDaoJpa" />
     <bean id="productDao" class="com.weavers.duqhan.dao.jpa.ProductDaoJpa" />
-    <bean id="productSizeColorMapDao" class="com.weavers.duqhan.dao.jpa.ProductSizeColorMapDaoJpa" />
     <bean id="categoryDao" class="com.weavers.duqhan.dao.jpa.CategoryDaoJpa" />
     <bean id="productImgDao" class="com.weavers.duqhan.dao.jpa.ProductImgDaoJpa" />
-    <bean id="sizeeDao" class="com.weavers.duqhan.dao.jpa.SizeeDaoJpa" />
-    <bean id="colorDao" class="com.weavers.duqhan.dao.jpa.ColorDaoJpa" />
-    <bean id="sizeGroupDao" class="com.weavers.duqhan.dao.jpa.SizeGroupDaoJpa" />
-    <bean id="specificationDao" class="com.weavers.duqhan.dao.jpa.SpecificationDaoJpa" />
-    <bean id="cartDao" class="com.weavers.duqhan.dao.jpa.CartDaoJpa" />
-    
     <bean id="temtproductlinklistDao" class="com.weavers.duqhan.dao.jpa.TemtproductlinklistDaoJpa" />
-    <bean id="tempProductDao" class="com.weavers.duqhan.dao.jpa.TempProductDaoJpa" />
-    <bean id="tempProductImgDao" class="com.weavers.duqhan.dao.jpa.TempProductImgDaoJpa" />
-    <bean id="tempProductSizeColorMapDao" class="com.weavers.duqhan.dao.jpa.TempProductSizeColorMapDaoJpa" />
+    <bean id="productPropertiesDao" class="com.weavers.duqhan.dao.jpa.ProductPropertiesDaoJpa" />
+    <bean id="productPropertiesMapDao" class="com.weavers.duqhan.dao.jpa.ProductPropertiesMapDaoJpa" />
+    <bean id="productPropertyvaluesDao" class="com.weavers.duqhan.dao.jpa.ProductPropertyvaluesDaoJpa" />
+    <bean id="orderDetailsDao" class="com.weavers.duqhan.dao.jpa.OrderDetailsDaoJpa" />
+    <bean id="userAddressDao" class="com.weavers.duqhan.dao.jpa.UserAddressDaoJpa" />
+    <bean id="usersDao" class="com.weavers.duqhan.dao.jpa.UsersDaoJpa" />
+
     <bean
         id="entityManagerFactory"
         class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
         p:dataSource-ref="dataSource"
         p:persistenceXmlLocation="classpath:/META-INF/persistence.xml"
-        p:persistenceUnitName="duqhan-db" />
+        p:persistenceUnitName="duqhandb" />
     
     <!-- bean post-processor for JPA annotations -->
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
@@ -57,15 +54,20 @@
         
         <!-- Local Configuration -->
     
-<!--                <property name="url" value="jdbc:mysql://localhost:3306/duqhandb" />
+        <property name="url" value="jdbc:mysql://localhost:3306/duqhandb_new" />
         <property name="username" value="root" />
-        <property name="password" value="" /> -->
+        <property name="password" value="" /> 
     
         <!-- Server Configuration -->
         
-        <property name="url" value="jdbc:mysql://duqhandb.c1mlv6dykivx.us-east-1.rds.amazonaws.com:3306/duqhandb" />
+        <!--        <property name="url" value="jdbc:mysql://duqhandb.c1mlv6dykivx.us-east-1.rds.amazonaws.com:3306/duqhandb" />
         <property name="username" value="duqhunDbAdmin" />
-        <property name="password" value="wgJncDU2M-=vMkEU" />
+        <property name="password" value="wgJncDU2M-=vMkEU" />-->
+        
+        <!-- Production Server Configuration -->
+        <!--        <property name="url" value="jdbc:mysql://duqhandb.c1mlv6dykivx.us-east-1.rds.amazonaws.com:3306/tmp" />
+        <property name="username" value="duqhunDbAdmin" />
+        <property name="password" value="wgJncDU2M-=vMkEU" />-->
         
     </bean>
 

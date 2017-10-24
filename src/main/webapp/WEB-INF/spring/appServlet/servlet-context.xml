@@ -16,18 +16,19 @@
     
 
     <beans:bean id="tilesConfigurer"
-                  class="org.springframework.web.servlet.view.tiles3.TilesConfigurer"
-                  p:definitions="/WEB-INF/tiles-defs/templates.xml" />
+                class="org.springframework.web.servlet.view.tiles3.TilesConfigurer"
+                p:definitions="/WEB-INF/tiles-defs/templates.xml" />
 
     <beans:bean id="tilesViewResolver"
-               class="org.springframework.web.servlet.view.UrlBasedViewResolver"
-               p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView">
+                class="org.springframework.web.servlet.view.UrlBasedViewResolver"
+                p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView">
         <!--        <beans:property name="order" value="1"/>-->
     </beans:bean>
     
     
     <beans:bean id="productService" class="com.weavers.duqhan.business.impl.ProductServiceImpl"/>  
     <beans:bean id="adminService" class="com.weavers.duqhan.business.impl.AdminServiceImpl"/>
+    <beans:bean id="mailService" class="com.weavers.duqhan.business.impl.MailServiceImpl"/>
     
     <!-- Root Context: defines shared resources visible to all other web components -->
     <context:component-scan base-package="com.weavers.duqhan" />

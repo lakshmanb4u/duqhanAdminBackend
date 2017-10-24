@@ -8,6 +8,9 @@ package com.weavers.duqhan.domain;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -18,7 +21,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "category")
-public class Category extends BaseDomain{
+public class Category extends BaseDomain {
 
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
@@ -35,7 +38,10 @@ public class Category extends BaseDomain{
     @Size(min = 1, max = 255)
     @Column(name = "parent_path")
     private String parentPath;
-
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "quantity")
+    private long quantity;
 
     public String getName() {
         return name;
@@ -52,6 +58,7 @@ public class Category extends BaseDomain{
     public void setParentId(long parentId) {
         this.parentId = parentId;
     }
+
     public String getParentPath() {
         return parentPath;
     }
@@ -60,5 +67,11 @@ public class Category extends BaseDomain{
         this.parentPath = parentPath;
     }
 
-
+    public long getQuantity() {
+        return quantity;
     }
+
+    public void setQuantity(long quantity) {
+        this.quantity = quantity;
+    }
+}

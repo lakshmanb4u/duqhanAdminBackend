@@ -122,4 +122,4 @@ public class Vendor extends BaseDomain {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    }
+}

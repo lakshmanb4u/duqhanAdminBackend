@@ -5,16 +5,13 @@
  */
 package com.weavers.duqhan.business;
 
-import com.weavers.duqhan.dto.StatusBean;
-import java.util.List;
+import com.weavers.duqhan.domain.OrderDetails;
 
 /**
  *
- * @author Android-3
+ * @author weaversAndroid
  */
-public interface ProductService {
+public interface MailService {
 
-    public List<StatusBean> getTempProductLinks(String link);
-
-    void loadTempProducts(List<StatusBean> statusBeans);
+    String mailToUserForOrderStatusChange(OrderDetails orderDetails);
 }

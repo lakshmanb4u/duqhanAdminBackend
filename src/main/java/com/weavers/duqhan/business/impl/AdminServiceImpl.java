@@ -6,17 +6,37 @@
 package com.weavers.duqhan.business.impl;
 
 import com.weavers.duqhan.business.AdminService;
+import com.weavers.duqhan.business.MailService;
 import com.weavers.duqhan.dao.DuqhanAdminDao;
+import com.weavers.duqhan.dao.OrderDetailsDao;
+import com.weavers.duqhan.dao.ProductDao;
+import com.weavers.duqhan.dao.ProductPropertiesDao;
+import com.weavers.duqhan.dao.ProductPropertyvaluesDao;
+import com.weavers.duqhan.dao.UserAddressDao;
 import com.weavers.duqhan.dao.VendorDao;
 import com.weavers.duqhan.domain.DuqhanAdmin;
+import com.weavers.duqhan.domain.OrderDetails;
+import com.weavers.duqhan.domain.Product;
+import com.weavers.duqhan.domain.ProductProperties;
+import com.weavers.duqhan.domain.ProductPropertiesMap;
+import com.weavers.duqhan.domain.ProductPropertyvalues;
+import com.weavers.duqhan.domain.UserAddress;
+import com.weavers.duqhan.domain.Users;
 import com.weavers.duqhan.domain.Vendor;
 import com.weavers.duqhan.dto.AddressDto;
 import com.weavers.duqhan.dto.AouthBean;
 import com.weavers.duqhan.dto.LoginBean;
+import com.weavers.duqhan.dto.OrderDto;
+import com.weavers.duqhan.dto.OrderListDto;
+import com.weavers.duqhan.dto.StatusBean;
+import com.weavers.duqhan.util.DateFormater;
 import com.weavers.duqhan.util.GoogleBucketFileUploader;
 import com.weavers.duqhan.util.RandomCodeGenerator;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +51,18 @@ public class AdminServiceImpl implements AdminService {
     DuqhanAdminDao duqhanAdminDao;
     @Autowired
     VendorDao vendorDao;
+    @Autowired
+    OrderDetailsDao orderDetailsDao;
+    @Autowired
+    ProductDao productDao;
+    @Autowired
+    ProductPropertyvaluesDao productPropertyvaluesDao;
+    @Autowired
+    ProductPropertiesDao productPropertiesDao;
+    @Autowired
+    UserAddressDao userAddressDao;
+    @Autowired
+    MailService mailService;
 
     @Override
     public String adminLogin(LoginBean loginBean, HttpSession session) {
@@ -129,6 +161,75 @@ public class AdminServiceImpl implements AdminService {
         if (oldImgUrl != null && oldImgUrl.contains("duqhan-images/")) {
             String imgName = oldImgUrl.split("duqhan-images/")[1];
             GoogleBucketFileUploader.deleteProductImg(imgName);
+        }
+    }
+
+    @Override
+    public void getOrderList(OrderListDto orderListDto) {
+        List<OrderDto> orderDtos = new ArrayList<>();
+        List<Object[]> allObjects = orderDetailsDao.getOrderDetailsList(orderListDto.getStart(), orderListDto.getLimit());
+        for (Object[] objectArray : allObjects) {
+            OrderDetails orderDetails = (OrderDetails) objectArray[0];
+            ProductPropertiesMap propertyMap = (ProductPropertiesMap) objectArray[1];
+            Users user = (Users) objectArray[2];
+            UserAddress userAddress = userAddressDao.loadById(orderDetails.getAddressId());
+            AddressDto addressDto = new AddressDto();
+            addressDto.setAddressId(userAddress.getId());
+            addressDto.setCity(userAddress.getCity());
+            addressDto.setCompanyName(userAddress.getCompanyName());
+            addressDto.setContactName(userAddress.getContactName());
+            addressDto.setCountry(userAddress.getCountry());
+            addressDto.setPhone(userAddress.getPhone());
+            addressDto.setStreetOne(userAddress.getStreetOne());
+            addressDto.setStreetTwo(userAddress.getStreetTwo());
+            addressDto.setZipCode(userAddress.getZipCode());
+            addressDto.setState(userAddress.getState());
+            Product product = productDao.loadById(propertyMap.getProductId());
+            OrderDto orderDto = new OrderDto();
+            orderDto.setId(orderDetails.getId());
+            orderDto.setDate(DateFormater.formate(orderDetails.getOrderDate()));
+            orderDto.setProductId(product.getId());
+            orderDto.setProductName(product.getName());
+            orderDto.setExternalLink(product.getExternalLink());
+            orderDto.setQuantity(orderDetails.getQuentity());
+            orderDto.setUserName(user.getName());
+            orderDto.setEmail(user.getEmail());
+            orderDto.setPrice(orderDetails.getPaymentAmount());
+            orderDto.setOrderId(orderDetails.getOrderId());
+            orderDto.setOrderStatus(orderDetails.getStatus());
+            orderDto.setImgurl(product.getImgurl());
+            orderDto.setAddress(addressDto);
+            String[] propertyValueIds = new String[0];
+            propertyValueIds = propertyMap.getPropertyvalueComposition().split("_");
+            HashMap<String, String> propertiesMap = new HashMap<>();
+            if (propertyValueIds.length > 0) {
+                for (String propertyValueId : propertyValueIds) {
+                    try {
+                        ProductPropertyvalues productPropertyvalues = productPropertyvaluesDao.loadById(Long.valueOf(propertyValueId));
+                        ProductProperties properties = productPropertiesDao.loadById(productPropertyvalues.getPropertyId());
+                        propertiesMap.put(properties.getPropertyName(), productPropertyvalues.getValueName());
+                    } catch (Exception nfe) {
+                    }
+                }
+            }
+            orderDto.setProperties(propertiesMap);
+            orderDtos.add(orderDto);
+            orderListDto.setOrderDtos(orderDtos);
+            orderListDto.setStatusCode("200");
+        }
+    }
+
+    @Override
+    public void changeOrderStatus(StatusBean statusBean) {
+        statusBean.setStatusCode("500");
+        OrderDetails orderDetails = orderDetailsDao.loadById(statusBean.getId());
+        if (orderDetails != null && statusBean.getStatus() != null) {
+            orderDetails.setStatus(statusBean.getStatus());
+            OrderDetails savedOrderDetails = orderDetailsDao.save(orderDetails);
+            if (savedOrderDetails != null) {
+                mailService.mailToUserForOrderStatusChange(savedOrderDetails);
+                statusBean.setStatusCode("200");
+            }
         }
     }
 

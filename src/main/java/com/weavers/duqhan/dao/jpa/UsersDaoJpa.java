@@ -5,17 +5,17 @@
  */
 package com.weavers.duqhan.dao.jpa;
 
-import com.weavers.duqhan.dao.CartDao;
-import com.weavers.duqhan.domain.Cart;
+import com.weavers.duqhan.dao.UsersDao;
+import com.weavers.duqhan.domain.Users;
 
 /**
  *
- * @author Android-3
+ * @author weaversAndroid
  */
-public class CartDaoJpa extends BaseDaoJpa<Cart> implements CartDao {
+public class UsersDaoJpa extends BaseDaoJpa<Users> implements UsersDao {
 
-    public CartDaoJpa() {
-        super(Cart.class, "Cart");
+    public UsersDaoJpa() {
+        super(Users.class, "Users");
     }
 
 }

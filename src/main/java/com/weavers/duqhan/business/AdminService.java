@@ -9,6 +9,8 @@ import com.weavers.duqhan.domain.DuqhanAdmin;
 import com.weavers.duqhan.dto.AddressDto;
 import com.weavers.duqhan.dto.AouthBean;
 import com.weavers.duqhan.dto.LoginBean;
+import com.weavers.duqhan.dto.OrderListDto;
+import com.weavers.duqhan.dto.StatusBean;
 import javax.servlet.http.HttpSession;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,4 +33,8 @@ public interface AdminService {
     String uploadProductImage(Long productId, MultipartFile file);
 
     void deleteProductImage(String oldImgUrl);
+    
+    void getOrderList(OrderListDto orderListDto);
+    
+    void changeOrderStatus(StatusBean statusBean);
 }

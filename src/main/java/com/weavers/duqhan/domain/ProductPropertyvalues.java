@@ -5,48 +5,49 @@
  */
 package com.weavers.duqhan.domain;
 
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author weaversAndroid
  */
 @Entity
-@Table(name = "recent_view")
-public class RecentView extends BaseDomain {
+@Table(name = "product_propertyvalues")
+public class ProductPropertyvalues extends BaseDomain {
 
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "user_id")
-    private long userId;
+    @Lob
+    @Size(min = 1, max = 65535)
+    @Column(name = "value_name")
+    private String valueName;
     @Basic(optional = false)
     @NotNull
     @Column(name = "product_id")
     private long productId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "view_date")
-    @Temporal(TemporalType.DATE)
-    private Date viewDate;
+    @Column(name = "property_id")
+    private long propertyId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "visit_count")
-    private long visitCount;
+    @Size(min = 1, max = 255)
+    @Column(name = "ref_id")
+    private String refId;
 
-    public long getUserId() {
-        return userId;
+    public String getValueName() {
+        return valueName;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setValueName(String valueName) {
+        this.valueName = valueName;
     }
 
     public long getProductId() {
@@ -57,20 +58,20 @@ public class RecentView extends BaseDomain {
         this.productId = productId;
     }
 
-    public Date getViewDate() {
-        return viewDate;
+    public long getPropertyId() {
+        return propertyId;
     }
 
-    public void setViewDate(Date viewDate) {
-        this.viewDate = viewDate;
+    public void setPropertyId(long propertyId) {
+        this.propertyId = propertyId;
     }
 
-    public long getVisitCount() {
-        return visitCount;
+    public String getRefId() {
+        return refId;
     }
 
-    public void setVisitCount(long visitCount) {
-        this.visitCount = visitCount;
+    public void setRefId(String refId) {
+        this.refId = refId;
     }
 
 }

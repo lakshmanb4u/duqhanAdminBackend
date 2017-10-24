@@ -49,30 +49,24 @@ public class WebController {
         return userBean;
     }
 
-    @RequestMapping(value = "/testom", method = RequestMethod.GET) // Load temp product from list
+    @RequestMapping(value = "/scraping-links", method = RequestMethod.GET) // scraping product from list
     @ResponseBody
-    public String testom(@RequestParam int start,@RequestParam int limit) {
+    public String scrapingLinks(@RequestParam String link) {
+        productService.getTempProductLinks(link);
+        return "wait'n watch..";
+    }
+
+    @RequestMapping(value = "/scraping", method = RequestMethod.GET) // scraping product from list
+    @ResponseBody
+    public String scraping(@RequestParam int start, @RequestParam int limit) {
         List<StatusBean> statusBeans = new ArrayList<>();
-        for (int i = start; i < start+limit; i++) {
+        for (int i = start; i < start + limit; i++) {
             StatusBean bean = new StatusBean();
             bean.setId(Long.valueOf(i));
             statusBeans.add(bean);
         }
         Collections.shuffle(statusBeans);
         productService.loadTempProducts(statusBeans);
-        return "wait'n watch..";
-    }
-    
-    @RequestMapping(value = "/test-commit", method = RequestMethod.GET) // Move temp product to main product
-    @ResponseBody
-    public String testomCommit(@RequestParam int start,@RequestParam int limit) {
-        List<StatusBean> statusBeans = new ArrayList<>();
-        for (int i = start; i < start+limit; i++) {
-            StatusBean bean = new StatusBean();
-            bean.setId(Long.valueOf(i));
-            statusBeans.add(bean);
-        }
-        productService.moveTempProductToProduct(statusBeans);
         return "wait'n watch..";
     }
 

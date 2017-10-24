@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author Android-3
+ * @author weaversAndroid
  */
 @Entity
 @Table(name = "order_details")
@@ -29,10 +29,6 @@ public class OrderDetails extends BaseDomain {
     @Size(min = 1, max = 255)
     @Column(name = "order_id")
     private String orderId;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "address_id")
-    private Long addressId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "user_id")
@@ -64,15 +60,27 @@ public class OrderDetails extends BaseDomain {
     @NotNull
     @Column(name = "quentity")
     private long quentity;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "address_id")
+    private long addressId;
     @Column(name = "delivery_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date deliveryDate;
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "shipment_id")
     private String shipmentId;
     @Size(max = 255)
     @Column(name = "return_status")
     private String returnStatus;
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
 
     public long getUserId() {
         return userId;
@@ -130,11 +138,11 @@ public class OrderDetails extends BaseDomain {
         this.quentity = quentity;
     }
 
-    public Long getAddressId() {
+    public long getAddressId() {
         return addressId;
     }
 
-    public void setAddressId(Long addressId) {
+    public void setAddressId(long addressId) {
         this.addressId = addressId;
     }
 
@@ -144,14 +152,6 @@ public class OrderDetails extends BaseDomain {
 
     public void setDeliveryDate(Date deliveryDate) {
         this.deliveryDate = deliveryDate;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
     }
 
     public String getShipmentId() {

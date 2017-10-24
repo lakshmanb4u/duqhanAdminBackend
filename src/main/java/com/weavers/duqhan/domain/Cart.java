@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author Android-3
+ * @author weaversAndroid
  */
 @Entity
 @Table(name = "cart")
@@ -34,8 +34,12 @@ public class Cart extends BaseDomain {
     private Date loadDate;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "sizecolormap_id")
-    private long sizecolormapId;
+    @Column(name = "product_property_map_id")
+    private long productPropertyMapId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "discount_offer_pct")
+    private double discountOfferPct;
 
     public long getUserId() {
         return userId;
@@ -53,12 +57,19 @@ public class Cart extends BaseDomain {
         this.loadDate = loadDate;
     }
 
-    public long getSizecolormapId() {
-        return sizecolormapId;
+    public long getProductPropertyMapId() {
+        return productPropertyMapId;
     }
 
-    public void setSizecolormapId(long sizecolormapId) {
-        this.sizecolormapId = sizecolormapId;
+    public void setProductPropertyMapId(long productPropertyMapId) {
+        this.productPropertyMapId = productPropertyMapId;
     }
 
+    public double getDiscountOfferPct() {
+        return discountOfferPct;
+    }
+
+    public void setDiscountOfferPct(double discountOfferPct) {
+        this.discountOfferPct = discountOfferPct;
+    }
 }
