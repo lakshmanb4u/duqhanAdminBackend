@@ -27,6 +27,8 @@ import com.weavers.duqhan.dto.SkuVal;
 import com.weavers.duqhan.dto.StatusBean;
 import com.weavers.duqhan.util.CurrencyConverter;
 import com.weavers.duqhan.util.GoogleBucketFileUploader;
+import com.weavers.duqhan.util.ProxyJsoup;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,12 +84,12 @@ public class ProductServiceImpl implements ProductService {
         String nexturl = null;
         String firstPart = null;
         String secondPart = null;
-        int[] pageNumber = new int[999];
+        /*int[] pageNumber = new int[999];
         for (int i = 0; i < 999; i++) {
             pageNumber[i] = (1 + (int) (Math.random() * 1000));
-        }
+        }*/
         try {
-            Document doc = Jsoup.connect(productList).get();
+            Document doc = ProxyJsoup.connect(productList);//Jsoup.connect(productList).get();
             productUrlList = doc.select("div.ui-pagination-navi a");
             if (!productUrlList.isEmpty()) {
                 nexturl = productUrlList.get(0).attr("abs:href");
@@ -96,12 +98,23 @@ public class ProductServiceImpl implements ProductService {
                 secondPart = nexturl.split(".html")[1];
                 secondPart = ".html" + secondPart;
                 for (int i = 0; i < 999; i++) {
-                    nexturl = firstPart + pageNumber[i] + secondPart;
-                    doc = Jsoup.connect(nexturl).get();
+                    /*
+                	nexturl = firstPart + pageNumber[i] + secondPart;
+                    */
+                	nexturl = firstPart + i + secondPart;
+                	
+                	doc = ProxyJsoup.connect(productList);
+                	if(doc == null) {
+                		// Here we are assuming that there is no more legitimate pages, hence we don't need to continue
+                		break;
+                	}
+                    //Jsoup.connect(nexturl).get();
+                    
                     productUrlList = doc.select(".son-list .list-item .pic a[href]");
+                    
                     //=================== Random sleep START ===================//
-                    Random randomObj = new Random();
-                    TimeUnit.SECONDS.sleep(randomObj.ints(30, 60).findFirst().getAsInt());
+                    // Random randomObj = new Random();
+                    // TimeUnit.SECONDS.sleep(randomObj.ints(30, 60).findFirst().getAsInt());
                     //=================== Random sleep END =====================//
 
                     if (!productUrlList.isEmpty()) {
@@ -120,6 +133,9 @@ public class ProductServiceImpl implements ProductService {
                                 statusBeans.add(statusBean);
                             }
                         }
+                    } else {
+                    	// Here we are assuming that there is no more legitimate pages, hence we don't need to continue
+                		break;
                     }
                 }
             }
