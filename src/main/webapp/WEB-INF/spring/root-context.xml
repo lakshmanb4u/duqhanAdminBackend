@@ -54,9 +54,9 @@
         
         <!-- Local Configuration -->
     
-        <property name="url" value="jdbc:mysql://localhost:3306/duqhandb_new" />
+<!--        <property name="url" value="jdbc:mysql://localhost:3306/duqhandb_new" />
         <property name="username" value="root" />
-        <property name="password" value="" /> 
+        <property name="password" value="" /> -->
     
         <!-- Server Configuration -->
         
@@ -65,9 +65,14 @@
         <property name="password" value="wgJncDU2M-=vMkEU" />-->
         
         <!-- Production Server Configuration -->
-        <!--        <property name="url" value="jdbc:mysql://duqhandb.c1mlv6dykivx.us-east-1.rds.amazonaws.com:3306/tmp" />
+                <property name="url" value="jdbc:mysql://duqhandb.c1mlv6dykivx.us-east-1.rds.amazonaws.com:3306/tmp" />
         <property name="username" value="duqhunDbAdmin" />
-        <property name="password" value="wgJncDU2M-=vMkEU" />-->
+        <property name="password" value="wgJncDU2M-=vMkEU" />
+        
+        <!-- Production Server staging -->
+<!--                <property name="url" value="jdbc:mysql://duqhandbstaging.c1mlv6dykivx.us-east-1.rds.amazonaws.com:3306/duqhanstagdb" />
+        <property name="username" value="stagingdb" />
+        <property name="password" value="staging123" />-->
         
     </bean>
 

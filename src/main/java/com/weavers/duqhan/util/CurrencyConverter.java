@@ -5,6 +5,8 @@
  */
 package com.weavers.duqhan.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.weavers.duqhan.dto.CurrencyRates;
 import java.io.IOException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -20,17 +22,33 @@ public class CurrencyConverter {
 
     public static Double convert(String currencyFrom, String currencyTo) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("http://quote.yahoo.com/d/quotes.csv?s=" + currencyFrom + currencyTo + "=X&f=l1&e=.csv");
+//        HttpGet httpGet = new HttpGet("https://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json");
+        HttpGet httpGet = new HttpGet("https://cdn.shopify.com/s/javascripts/currencies.js");
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         String responseBody = httpclient.execute(httpGet, responseHandler);
         httpclient.getConnectionManager().shutdown();
-        return Double.parseDouble(responseBody);
+
+        String rates = responseBody.split("rates:")[1].split("convert")[0];
+        rates = rates.substring(0, rates.length() - 1);
+        ObjectMapper mapper = new ObjectMapper();
+        CurrencyRates jSONReader = null;
+        jSONReader = mapper.readValue(rates, CurrencyRates.class);
+//        System.out.println("ssssssssssss == " + jSONReader.getINR());
+        double ratio = 0.0;
+        if (currencyTo.equals("USD")) {
+            ratio = jSONReader.getINR() / jSONReader.getUSD();
+        } else {
+            ratio = jSONReader.getUSD() / jSONReader.getINR();
+        }
+        return ratio;
     }
 
     public static Double usdTOinr(Double usdValue) {
         try {
-            Double inrValue = CurrencyConverter.convert("USD", "INR");//usd to inr
-            return Double.valueOf(String.valueOf(inrValue * usdValue));
+//            amount * this.rates[from]) / this.rates[to]
+
+            Double inrRatio = CurrencyConverter.convert("USD", "INR");//usd to inr
+            return usdValue * inrRatio;
         } catch (Exception e) {
             return null;
         }
@@ -38,8 +56,8 @@ public class CurrencyConverter {
 
     public static Double inrTOusd(Double inrValue) {
         try {
-            Double usdValue = CurrencyConverter.convert("INR", "USD");//inr to usd
-            return Double.valueOf(String.valueOf(inrValue * usdValue));
+            Double usdRatio = CurrencyConverter.convert("INR", "USD");//inr to usd
+            return inrValue * usdRatio;
         } catch (Exception e) {
             return null;
         }

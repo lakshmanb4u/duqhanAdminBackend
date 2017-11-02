@@ -184,7 +184,7 @@ public class AdminServiceImpl implements AdminService {
             addressDto.setStreetTwo(userAddress.getStreetTwo());
             addressDto.setZipCode(userAddress.getZipCode());
             addressDto.setState(userAddress.getState());
-            Product product = productDao.loadById(propertyMap.getProductId());
+            Product product = productDao.loadById(propertyMap.getProductId().getId());
             OrderDto orderDto = new OrderDto();
             orderDto.setId(orderDetails.getId());
             orderDto.setDate(DateFormater.formate(orderDetails.getOrderDate()));

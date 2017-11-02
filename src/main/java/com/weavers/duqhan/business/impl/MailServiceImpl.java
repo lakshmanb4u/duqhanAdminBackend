@@ -86,7 +86,7 @@ public class MailServiceImpl implements MailService {
                 }
                 property += "";
             }
-            product = productDao.loadById(propertyMap.getProductId());
+            product = propertyMap.getProductId()/*productDao.loadById(propertyMap.getProductId())*/;
             category = categoryDao.loadById(product.getCategoryId());
             order = order + "                               <tr>"
                     + "                                        <td><img src=\"" + product.getImgurl() + "\"  alt=\"Duqhan\" style=\"border:0;width:115px\"/></td>"

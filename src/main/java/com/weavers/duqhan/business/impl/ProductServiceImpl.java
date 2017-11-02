@@ -82,9 +82,10 @@ public class ProductServiceImpl implements ProductService {
         String nexturl = null;
         String firstPart = null;
         String secondPart = null;
-        int[] pageNumber = new int[999];
-        for (int i = 0; i < 999; i++) {
-            pageNumber[i] = (1 + (int) (Math.random() * 1000));
+        int[] pageNumber = new int[199];
+        Random randomObj1 = new Random();
+        for (int i = 0; i < 198; i++) {
+            pageNumber[i] = (randomObj1.ints(2, 200).findFirst().getAsInt());
         }
         try {
             Document doc = Jsoup.connect(productList).get();
@@ -95,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
                 firstPart = firstPart.substring(0, firstPart.length() - 1);
                 secondPart = nexturl.split(".html")[1];
                 secondPart = ".html" + secondPart;
-                for (int i = 0; i < 999; i++) {
+                for (int i = 0; i < 198; i++) {
                     nexturl = firstPart + pageNumber[i] + secondPart;
                     doc = Jsoup.connect(nexturl).get();
                     productUrlList = doc.select(".son-list .list-item .pic a[href]");
@@ -271,6 +272,8 @@ public class ProductServiceImpl implements ProductService {
                                                 category.setParentId(parentCategory.getId());
                                                 category.setParentPath(parentCategory.getParentPath() + parentCategory.getId() + "=");
                                                 category.setQuantity(0);
+                                                category.setImgUrl("-");
+                                                category.setDisplayText(newCategory);
                                                 Category category2 = categoryDao.save(category);
                                                 if (category.getName().equals(thisCategory)) {
                                                     productCategoryId = category2.getId();
@@ -441,7 +444,7 @@ public class ProductServiceImpl implements ProductService {
                                         }
                                         productPropertyMap.setDiscount(discountPrice);
                                         productPropertyMap.setPrice(actualPrice);
-                                        productPropertyMap.setProductId(savedTestProduct.getId());
+                                        productPropertyMap.setProductId(savedTestProduct);
                                         productPropertyMap.setQuantity(5l);
                                         productPropertiesMapDao.save(productPropertyMap);
                                     }
@@ -522,4 +525,18 @@ public class ProductServiceImpl implements ProductService {
         System.out.println("=============================================================end");
     }
 
+    public static void main(String[] args) {
+        int[] pageNumber = new int[499];
+        Random randomObj = new Random();
+        for (int i = 0; i < 498; i++) {
+            pageNumber[i] = (randomObj.ints(2, 500).findFirst().getAsInt());
+        }
+        try {
+            for (int i = 0; i < 498; i++) {
+                System.out.println("nexturlnexturlnexturlnexturl====" + pageNumber[i]);
+            }
+        } catch (Exception ex) {
+            System.out.println("(=============================================)DATE: " + new Date().toString() + ex.getLocalizedMessage());
+        }
+    }
 }

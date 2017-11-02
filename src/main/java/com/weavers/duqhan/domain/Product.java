@@ -6,10 +6,14 @@
 package com.weavers.duqhan.domain;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -83,6 +87,8 @@ public class Product extends BaseDomain {
     private String externalLink;
     @Column(name = "specifications")
     private String specifications;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "productId", cascade = CascadeType.ALL)
+    private List<ProductPropertiesMap> ProductPropertiesMaps;
 
     public String getName() {
         return name;
@@ -216,6 +222,20 @@ public class Product extends BaseDomain {
 
     public void setProductWidth(double productWidth) {
         this.productWidth = productWidth;
+    }
+
+    /**
+     * @return the ProductPropertiesMaps
+     */
+    public List<ProductPropertiesMap> getProductPropertiesMaps() {
+        return ProductPropertiesMaps;
+    }
+
+    /**
+     * @param ProductPropertiesMaps the ProductPropertiesMaps to set
+     */
+    public void setProductPropertiesMaps(List<ProductPropertiesMap> ProductPropertiesMaps) {
+        this.ProductPropertiesMaps = ProductPropertiesMaps;
     }
 
 }
