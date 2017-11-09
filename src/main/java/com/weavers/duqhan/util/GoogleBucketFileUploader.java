@@ -30,9 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class GoogleBucketFileUploader {
     // https://cloud.google.com/java/getting-started/using-cloud-storage
 
-    private static final String PROJECT_ID = "tangential-box-171303";
-    private static final String USER_BUCKET_NAME = "duqhan-users";
-    private static final String PRODUCT_BUCKET_NAME = "duqhan-product";
+    private static final String PROJECT_ID = "PROJECT_ID";
+    private static final String USER_BUCKET_NAME = "USER_BUCKET_NAME";
+    private static final String PRODUCT_BUCKET_NAME = "PRODUCT_BUCKET_NAME";
     private static final String OLD_PRODUCT_BUCKET_NAME = "duqhan-images";
     private static final String JSON_PATH = "/DUQHAN-e19d56eacc29.json";
 
