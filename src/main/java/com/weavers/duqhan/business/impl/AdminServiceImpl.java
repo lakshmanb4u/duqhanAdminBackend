@@ -9,6 +9,7 @@ import com.weavers.duqhan.business.AdminService;
 import com.weavers.duqhan.business.MailService;
 import com.weavers.duqhan.dao.DuqhanAdminDao;
 import com.weavers.duqhan.dao.OrderDetailsDao;
+import com.weavers.duqhan.dao.OrderWorkflowDao;
 import com.weavers.duqhan.dao.ProductDao;
 import com.weavers.duqhan.dao.ProductPropertiesDao;
 import com.weavers.duqhan.dao.ProductPropertyvaluesDao;
@@ -16,6 +17,7 @@ import com.weavers.duqhan.dao.UserAddressDao;
 import com.weavers.duqhan.dao.VendorDao;
 import com.weavers.duqhan.domain.DuqhanAdmin;
 import com.weavers.duqhan.domain.OrderDetails;
+import com.weavers.duqhan.domain.OrderWorkflow;
 import com.weavers.duqhan.domain.Product;
 import com.weavers.duqhan.domain.ProductProperties;
 import com.weavers.duqhan.domain.ProductPropertiesMap;
@@ -28,6 +30,7 @@ import com.weavers.duqhan.dto.AouthBean;
 import com.weavers.duqhan.dto.LoginBean;
 import com.weavers.duqhan.dto.OrderDto;
 import com.weavers.duqhan.dto.OrderListDto;
+import com.weavers.duqhan.dto.OrderWorkflowDto;
 import com.weavers.duqhan.dto.StatusBean;
 import com.weavers.duqhan.util.DateFormater;
 import com.weavers.duqhan.util.GoogleBucketFileUploader;
@@ -37,6 +40,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,6 +68,8 @@ public class AdminServiceImpl implements AdminService {
     UserAddressDao userAddressDao;
     @Autowired
     MailService mailService;
+    @Autowired
+    OrderWorkflowDao orderWorkflowDao;
 
     @Override
     public String adminLogin(LoginBean loginBean, HttpSession session) {
@@ -199,6 +206,7 @@ public class AdminServiceImpl implements AdminService {
             orderDto.setOrderStatus(orderDetails.getStatus());
             orderDto.setImgurl(product.getImgurl());
             orderDto.setAddress(addressDto);
+            
             String[] propertyValueIds = new String[0];
             propertyValueIds = propertyMap.getPropertyvalueComposition().split("_");
             HashMap<String, String> propertiesMap = new HashMap<>();
@@ -232,5 +240,25 @@ public class AdminServiceImpl implements AdminService {
             }
         }
     }
+
+	@Override
+	public void getOrderWorkflowList(OrderWorkflowDto orderWorkFlowDto) {
+		//orderWorkFlowDto.setOrderWorkflow(orderWorkflowDao.getAllOrderWorkflow());
+		List<OrderWorkflow> orderWorkflowData = orderWorkflowDao.getAllOrderWorkflow();
+		Map<String,List<OrderWorkflow>> orderworkflow = new HashMap<>();
+		for(OrderWorkflow owf : orderWorkflowData){
+			String key = owf.getModule();
+			List<OrderWorkflow> data = orderworkflow.get(key);
+			if(data == null) {
+				data = new ArrayList<OrderWorkflow>();
+				orderworkflow.put(key, data);
+			}
+			data.add(owf);
+		}
+		orderWorkFlowDto.setOrderWorkflowList(orderworkflow);
+		
+	}
+
+
 
 }

@@ -11,6 +11,7 @@ import com.weavers.duqhan.dao.TemtproductlinklistDao;
 import com.weavers.duqhan.domain.DuqhanAdmin;
 import com.weavers.duqhan.dto.LoginBean;
 import com.weavers.duqhan.dto.OrderListDto;
+import com.weavers.duqhan.dto.OrderWorkflowDto;
 import com.weavers.duqhan.dto.StatusBean;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,5 +81,21 @@ public class AdminController {
             statusBean.setStatus("Invalid Token.");
         }
         return statusBean;
+    }
+    
+    @RequestMapping(value = "/orderWorkflow", method = RequestMethod.GET)
+    @ResponseBody
+    public OrderWorkflowDto getAllOrderWorkflow(HttpServletRequest request, HttpServletResponse response1) {
+    	DuqhanAdmin admin = adminService.getUserByToken(request.getHeader("X-Auth-Token"));
+    	OrderWorkflowDto orderWorkFlowDto = new OrderWorkflowDto();
+    	if(admin != null) {
+    		adminService.getOrderWorkflowList(orderWorkFlowDto);
+    	} else {
+    		response1.setStatus(401);
+    		orderWorkFlowDto.setStatus("Invalid Token.");
+    		orderWorkFlowDto.setStatusCode("401");
+    	}
+    	
+    	return orderWorkFlowDto;
     }
 }

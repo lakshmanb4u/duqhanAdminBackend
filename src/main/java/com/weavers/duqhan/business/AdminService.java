@@ -10,6 +10,7 @@ import com.weavers.duqhan.dto.AddressDto;
 import com.weavers.duqhan.dto.AouthBean;
 import com.weavers.duqhan.dto.LoginBean;
 import com.weavers.duqhan.dto.OrderListDto;
+import com.weavers.duqhan.dto.OrderWorkflowDto;
 import com.weavers.duqhan.dto.StatusBean;
 import javax.servlet.http.HttpSession;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,4 +38,6 @@ public interface AdminService {
     void getOrderList(OrderListDto orderListDto);
     
     void changeOrderStatus(StatusBean statusBean);
+    
+    void getOrderWorkflowList(OrderWorkflowDto orderWorkFlowDto);
 }

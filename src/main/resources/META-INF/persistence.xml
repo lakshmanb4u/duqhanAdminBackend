@@ -13,16 +13,6 @@
     <class>com.weavers.duqhan.domain.UserAouth</class>
     <class>com.weavers.duqhan.domain.Users</class>
     <class>com.weavers.duqhan.domain.OrderDetails</class>
-    <properties>
-      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
-      <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
-      <property name="hibernate.connection.username" value="${jdbc.username}"/>
-      <property name="hibernate.connection.password" value="${jdbc.password}"/>
-      <property name="hibernate.connection.url" value="${jdbc.url}"/>
-      <property name="hibernate.hbm2ddl.auto" value="create-update"/>
-      <property name="hibernate.ejb.autodetection" value="class"/>
-    </properties>
-    <!--<class>in.cloudlabz.tradengain.domain.Test</class>-->
     <class>com.weavers.duqhan.dao.jpa.DuqhanAdmin</class>
     <class>com.weavers.duqhan.dao.jpa.Vendor</class>
     <class>com.weavers.duqhan.dao.jpa.Product</class>
@@ -32,5 +22,14 @@
     <class>com.weavers.duqhan.dao.jpa.ProductProperties</class>
     <class>com.weavers.duqhan.dao.jpa.ProductPropertiesMap</class>
     <class>com.weavers.duqhan.dao.jpa.ProductPropertyvalues</class>
+    <properties>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+      <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+     <property name="url" value="jdbc:mysql://duqhandb.c1mlv6dykivx.us-east-1.rds.amazonaws.com:3306/tmp" />
+        <property name="username" value="duqhunDbAdmin" />
+        <property name="password" value="wgJncDU2M-=vMkEU" />
+      <property name="hibernate.hbm2ddl.auto" value="create-update"/>
+      <property name="hibernate.ejb.autodetection" value="class"/>
+    </properties>
   </persistence-unit>
 </persistence>

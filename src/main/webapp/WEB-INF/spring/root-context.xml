@@ -22,6 +22,7 @@
     <bean id="orderDetailsDao" class="com.weavers.duqhan.dao.jpa.OrderDetailsDaoJpa" />
     <bean id="userAddressDao" class="com.weavers.duqhan.dao.jpa.UserAddressDaoJpa" />
     <bean id="usersDao" class="com.weavers.duqhan.dao.jpa.UsersDaoJpa" />
+    <bean id="orderWorkflowDao" class="com.weavers.duqhan.dao.jpa.OrderWorkflowDaoJpa" />
 
     <bean
         id="entityManagerFactory"

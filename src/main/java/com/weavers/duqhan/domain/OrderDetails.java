@@ -74,6 +74,7 @@ public class OrderDetails extends BaseDomain {
     @Column(name = "return_status")
     private String returnStatus;
 
+
     public String getOrderId() {
         return orderId;
     }
@@ -168,5 +169,6 @@ public class OrderDetails extends BaseDomain {
 
     public void setReturnStatus(String returnStatus) {
         this.returnStatus = returnStatus;
-    }
+    }    
+    
 }
