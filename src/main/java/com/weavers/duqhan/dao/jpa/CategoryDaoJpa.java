@@ -40,4 +40,17 @@ public class CategoryDaoJpa extends BaseDaoJpa<Category> implements CategoryDao 
         }
     }
 
+	@Override
+	public List<Category> getCategory(int start, int limit) {
+		Query query = getEntityManager().createQuery("SELECT c FROM Category c").setFirstResult(start).setMaxResults(limit);
+        return query.getResultList();
+	}
+
+	@Override
+	public void updateCategoryImage(Long catId,String menuIcon) {
+		Query query = getEntityManager().createNativeQuery("update category c set c.menu_icon=:menuIcon where c.id=:catId ");
+		query.setParameter("catId", catId);
+		query.setParameter("menuIcon", menuIcon);
+	}
+
 }

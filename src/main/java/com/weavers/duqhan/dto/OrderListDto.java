@@ -18,6 +18,7 @@ public class OrderListDto {
     private int limit;
     private String status;
     private String StatusCode;
+    private String orderStatus;
 
     /**
      * @return the orderDtos
@@ -88,4 +89,13 @@ public class OrderListDto {
     public void setStatusCode(String StatusCode) {
         this.StatusCode = StatusCode;
     }
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+    
 }

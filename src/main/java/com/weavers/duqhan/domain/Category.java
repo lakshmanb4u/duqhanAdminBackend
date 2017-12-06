@@ -45,6 +45,9 @@ public class Category extends BaseDomain {
     @Size(max = 255)
     @Column(name = "display_text")
     private String displayText;
+    @Size(max = 255)
+    @Column(name = "menu_icon")
+    private String menuIcon;
 
     public String getName() {
         return name;
@@ -93,4 +96,13 @@ public class Category extends BaseDomain {
     public void setDisplayText(String displayText) {
         this.displayText = displayText;
     }
+
+	public String getMenuIcon() {
+		return menuIcon;
+	}
+
+	public void setMenuIcon(String menuIcon) {
+		this.menuIcon = menuIcon;
+	}
+    
 }

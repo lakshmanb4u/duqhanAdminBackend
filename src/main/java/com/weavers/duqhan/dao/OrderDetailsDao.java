@@ -15,4 +15,6 @@ import java.util.List;
 public interface OrderDetailsDao extends BaseDao<OrderDetails> {
 
     List<Object[]> getOrderDetailsList(int start, int limit);
+
+	List<Object[]> getOrderDetailsListByStatus(int start, int limit, String orderStatus);
 }

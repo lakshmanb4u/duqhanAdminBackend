@@ -27,4 +27,11 @@ public class OrderDetailsDaoJpa extends BaseDaoJpa<OrderDetails> implements Orde
         return query.getResultList();
     }
 
+	@Override
+	public List<Object[]> getOrderDetailsListByStatus(int start, int limit, String orderStatus) {
+		Query query = getEntityManager().createQuery("SELECT od, map, u FROM OrderDetails AS od, ProductPropertiesMap AS map,Users AS u WHERE od.userId=u.id AND od.mapId=map.id AND od.status=:status ORDER BY od.orderDate DESC").setFirstResult(start).setMaxResults(limit);
+        query.setParameter("status", orderStatus);
+        return query.getResultList();
+	}
+
 }

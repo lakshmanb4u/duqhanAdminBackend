@@ -7,6 +7,7 @@ package com.weavers.duqhan.business.impl;
 
 import com.weavers.duqhan.business.AdminService;
 import com.weavers.duqhan.business.MailService;
+import com.weavers.duqhan.dao.CategoryDao;
 import com.weavers.duqhan.dao.DuqhanAdminDao;
 import com.weavers.duqhan.dao.OrderDetailsDao;
 import com.weavers.duqhan.dao.OrderWorkflowDao;
@@ -15,6 +16,7 @@ import com.weavers.duqhan.dao.ProductPropertiesDao;
 import com.weavers.duqhan.dao.ProductPropertyvaluesDao;
 import com.weavers.duqhan.dao.UserAddressDao;
 import com.weavers.duqhan.dao.VendorDao;
+import com.weavers.duqhan.domain.Category;
 import com.weavers.duqhan.domain.DuqhanAdmin;
 import com.weavers.duqhan.domain.OrderDetails;
 import com.weavers.duqhan.domain.OrderWorkflow;
@@ -27,6 +29,7 @@ import com.weavers.duqhan.domain.Users;
 import com.weavers.duqhan.domain.Vendor;
 import com.weavers.duqhan.dto.AddressDto;
 import com.weavers.duqhan.dto.AouthBean;
+import com.weavers.duqhan.dto.CategoryDto;
 import com.weavers.duqhan.dto.LoginBean;
 import com.weavers.duqhan.dto.OrderDto;
 import com.weavers.duqhan.dto.OrderListDto;
@@ -41,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +70,8 @@ public class AdminServiceImpl implements AdminService {
     ProductPropertiesDao productPropertiesDao;
     @Autowired
     UserAddressDao userAddressDao;
+    @Autowired
+    CategoryDao categoryDao;
     @Autowired
     MailService mailService;
     @Autowired
@@ -170,11 +176,22 @@ public class AdminServiceImpl implements AdminService {
             GoogleBucketFileUploader.deleteProductImg(imgName);
         }
     }
-
+    @Override
+    public void getCategoryList(CategoryDto categoryDto) {
+    	List<Category> categories = new ArrayList<Category>();
+    	categories=categoryDao.getCategory(categoryDto.getStart(), categoryDto.getLimit());
+    	categoryDto.setCategories(categories);
+    	categoryDto.setStatusCode("200");
+    }
     @Override
     public void getOrderList(OrderListDto orderListDto) {
         List<OrderDto> orderDtos = new ArrayList<>();
-        List<Object[]> allObjects = orderDetailsDao.getOrderDetailsList(orderListDto.getStart(), orderListDto.getLimit());
+        List<Object[]> allObjects = new ArrayList<Object[]>();
+        if(Objects.nonNull(orderListDto.getOrderStatus()) && !(orderListDto.getOrderStatus().isEmpty())){
+        	 allObjects = orderDetailsDao.getOrderDetailsListByStatus(orderListDto.getStart(), orderListDto.getLimit(),orderListDto.getOrderStatus());
+        }else{
+             allObjects = orderDetailsDao.getOrderDetailsList(orderListDto.getStart(), orderListDto.getLimit());
+        }
         for (Object[] objectArray : allObjects) {
             OrderDetails orderDetails = (OrderDetails) objectArray[0];
             ProductPropertiesMap propertyMap = (ProductPropertiesMap) objectArray[1];
@@ -257,6 +274,13 @@ public class AdminServiceImpl implements AdminService {
 		}
 		orderWorkFlowDto.setOrderWorkflowList(orderworkflow);
 		
+	}
+
+	@Override
+	public void changeImage(String categoryId, MultipartFile file) {
+		Long catId = new Long(categoryId);
+		String menuIcon=GoogleBucketFileUploader.uploadCategoryImage(file, catId);
+		categoryDao.updateCategoryImage(catId, menuIcon);
 	}
 
 

@@ -5,6 +5,10 @@
  */
 package com.weavers.duqhan.dto;
 
+import java.util.List;
+
+import com.weavers.duqhan.domain.Category;
+
 /**
  *
  * @author Android-3
@@ -14,6 +18,11 @@ public class CategoryDto {
     private Long categoryId;
     private String categoryName;
     private Long patentId;
+    private List<Category> categories;
+    private int start;
+    private int limit;
+    private String status;
+    private String StatusCode;
 
     /**
      * @return the categoryId
@@ -56,4 +65,46 @@ public class CategoryDto {
     public void setPatentId(Long patentId) {
         this.patentId = patentId;
     }
+
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
+
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getStatusCode() {
+		return StatusCode;
+	}
+
+	public void setStatusCode(String statusCode) {
+		StatusCode = statusCode;
+	}
+    
+    
 }
