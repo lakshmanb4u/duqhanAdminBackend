@@ -19,7 +19,7 @@ import javax.mail.internet.*;
 public class MailSender {
 
     private static final String username = "duqhanapp@gmail.com";
-    private static final String password = "duqhanapp123";
+    private static final String password = "duqhan#123";
 
     public static String sendEmail(String destinationAddress, String subject, String msg, String bcc_address) /*throws Exception*/ {
         String status = "success";
