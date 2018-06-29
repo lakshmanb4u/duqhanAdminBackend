@@ -132,7 +132,7 @@ public class MailServiceImpl implements MailService {
                     + "                        </td>"
                     + "                    </tr>"
                     + "                    <tr>"
-                    + "                        <td><h3 style=\"font-size:18px;color:rgb(204,102,0);margin:15px 0 0 0;font-weight:normal\">Order Details (" + (orderDetails.getStatus().equals("delivered") ? "Delivered" : "Ready to ship") + ")</h3></td>"
+                    + "                        <td><h3 style=\"font-size:18px;color:rgb(204,102,0);margin:15px 0 0 0;font-weight:normal\">Order Details (" + (orderDetails.getStatus()) + ")</h3></td>"
                     + "                    </tr>"
                     + "                    <tr>"
                     + "                        <td>"
