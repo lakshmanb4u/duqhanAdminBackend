@@ -44,6 +44,8 @@ public interface AdminService {
     
     void getCategoryList(CategoryDto categoryDto);
     
+    CategoryDto getAllCategoryList();
+    
     void changeOrderStatus(StatusBean statusBean);
     
     void getOrderWorkflowList(OrderWorkflowDto orderWorkFlowDto);

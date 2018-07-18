@@ -21,4 +21,6 @@ public interface CategoryDao extends BaseDao<Category> {
     List<Category> getCategory(int start,int limit);
     
     void updateCategoryImage(Long catId,String menuIcon);
+
+	List<Category> getAllCategory();
 }

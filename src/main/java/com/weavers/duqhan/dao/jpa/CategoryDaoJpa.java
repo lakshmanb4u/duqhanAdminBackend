@@ -45,6 +45,12 @@ public class CategoryDaoJpa extends BaseDaoJpa<Category> implements CategoryDao 
 		Query query = getEntityManager().createQuery("SELECT c FROM Category c").setFirstResult(start).setMaxResults(limit);
         return query.getResultList();
 	}
+	
+	@Override
+	public List<Category> getAllCategory() {
+		Query query = getEntityManager().createQuery("SELECT c FROM Category c");
+        return query.getResultList();
+	}
 
 	@Override
 	public void updateCategoryImage(Long catId,String menuIcon) {

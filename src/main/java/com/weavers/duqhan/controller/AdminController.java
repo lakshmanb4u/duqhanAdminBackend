@@ -86,6 +86,21 @@ public class AdminController {
         }
         return categoryDto;
     }
+    
+    @RequestMapping(value = "/get-all-categories", method = RequestMethod.POST) //logout, destroy auth token.
+    @ResponseBody
+    public CategoryDto getAllCategories(HttpServletRequest request, HttpServletResponse response1) {
+        DuqhanAdmin admin = adminService.getUserByToken(request.getHeader("X-Auth-Token"));   // Check whether Auth-Token is valid, provided by user
+        CategoryDto categoryDto = new CategoryDto();
+        if (admin != null) {
+        	categoryDto=adminService.getAllCategoryList();
+        } else {
+            response1.setStatus(401);
+            categoryDto.setStatusCode("401");
+            categoryDto.setStatus("Invalid Token.");
+        }
+        return categoryDto;
+    }
 
     @RequestMapping(value = "/changeOrderStatus", method = RequestMethod.POST) //logout, destroy auth token.
     @ResponseBody

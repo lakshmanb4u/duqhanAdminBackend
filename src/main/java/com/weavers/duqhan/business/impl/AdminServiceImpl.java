@@ -184,6 +184,15 @@ public class AdminServiceImpl implements AdminService {
     	categoryDto.setStatusCode("200");
     }
     @Override
+    public CategoryDto getAllCategoryList() {
+    	CategoryDto categoryDto = new CategoryDto(); 
+    	List<Category> categories = new ArrayList<Category>();
+    	categories=categoryDao.getAllCategory();
+    	categoryDto.setCategories(categories);
+    	categoryDto.setStatusCode("200");
+    	return categoryDto;
+    }
+    @Override
     public void getOrderList(OrderListDto orderListDto) {
         List<OrderDto> orderDtos = new ArrayList<>();
         List<Object[]> allObjects = new ArrayList<Object[]>();
