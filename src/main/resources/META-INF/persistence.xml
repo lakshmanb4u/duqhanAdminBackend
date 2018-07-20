@@ -30,6 +30,8 @@
         <property name="password" value="wgJncDU2M-=vMkEU" />
       <property name="hibernate.hbm2ddl.auto" value="create-update"/>
       <property name="hibernate.ejb.autodetection" value="class"/>
+      <property name="hibernate.search.default.directory_provider" value="filesystem"/>
+	  <property name="hibernate.search.default.indexBase" value="/home/mnt/dev/workspace/duqhanBackend/searchindex"/>
     </properties>
   </persistence-unit>
 </persistence>

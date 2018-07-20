@@ -5,6 +5,9 @@
  */
 package com.weavers.duqhan.business;
 
+import com.weavers.duqhan.domain.DuqhanAdmin;
+import com.weavers.duqhan.dto.ProductNewBeans;
+import com.weavers.duqhan.dto.ProductRequistBean;
 import com.weavers.duqhan.dto.StatusBean;
 import java.util.List;
 
@@ -17,4 +20,6 @@ public interface ProductService {
     public List<StatusBean> getTempProductLinks(String link);
 
     void loadTempProducts(List<StatusBean> statusBeans);
+
+	ProductNewBeans searchProducts(ProductRequistBean requistBean);
 }

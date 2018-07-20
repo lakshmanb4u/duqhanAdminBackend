@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-
+import org.hibernate.search.annotations.DocumentId;
 /**
  * Base domain class for
  * all domain classes
@@ -19,6 +19,7 @@ public class BaseDomain implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID", nullable = false)
+    @DocumentId
     private Long id;
 
     public BaseDomain() {

@@ -16,6 +16,7 @@ import com.weavers.duqhan.dao.ProductPropertyvaluesDao;
 import com.weavers.duqhan.dao.TemtproductlinklistDao;
 import com.weavers.duqhan.dao.VendorDao;
 import com.weavers.duqhan.domain.Category;
+import com.weavers.duqhan.domain.DuqhanAdmin;
 import com.weavers.duqhan.domain.Product;
 import com.weavers.duqhan.domain.ProductImg;
 import com.weavers.duqhan.domain.ProductProperties;
@@ -23,11 +24,15 @@ import com.weavers.duqhan.domain.ProductPropertiesMap;
 import com.weavers.duqhan.domain.ProductPropertyvalues;
 import com.weavers.duqhan.domain.Temtproductlinklist;
 import com.weavers.duqhan.dto.AxpProductDto;
+import com.weavers.duqhan.dto.ProductNewBean;
+import com.weavers.duqhan.dto.ProductNewBeans;
+import com.weavers.duqhan.dto.ProductRequistBean;
 import com.weavers.duqhan.dto.SkuVal;
 import com.weavers.duqhan.dto.StatusBean;
 import com.weavers.duqhan.util.CurrencyConverter;
 import com.weavers.duqhan.util.GoogleBucketFileUploader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -67,6 +72,79 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     ProductPropertiesMapDao productPropertiesMapDao;
 
+    
+    @Override
+    public ProductNewBeans searchProducts(ProductRequistBean requistBean) {
+        List<Product> products = productDao.SearchProductByNameAndDescription(requistBean.getName(), requistBean.getStart(), requistBean.getLimit()); 
+        HashMap<Long, ProductPropertiesMap> mapProductPropertiesMap = new HashMap<>();
+        for (Product product : products) {
+            List<ProductPropertiesMap> productPropertiesMaps =  product.getProductPropertiesMaps();
+            for (ProductPropertiesMap productPropertiesMap : productPropertiesMaps) {
+                Long productId = productPropertiesMap.getProductId().getId();
+                if (mapProductPropertiesMap.containsKey(productId)) {    // if map contains then update
+                    if (mapProductPropertiesMap.get(productId).getDiscount() > productPropertiesMap.getDiscount()) {
+                        mapProductPropertiesMap.get(productId).setDiscount(productPropertiesMap.getDiscount());
+                        mapProductPropertiesMap.get(productId).setPrice(productPropertiesMap.getPrice());
+                        mapProductPropertiesMap.get(productId).setQuantity(mapProductPropertiesMap.get(productId).getQuantity() + productPropertiesMap.getQuantity());
+                    }
+                } else {    // else add new
+                    mapProductPropertiesMap.put(productId, productPropertiesMap);
+                }
+            }
+        }
+        return this.setNewProductBeans(products, mapProductPropertiesMap,25L);
+    }
+    
+    private ProductNewBeans setNewProductBeans(List<Product> products, HashMap<Long, ProductPropertiesMap> mapProductPropertiesMaps, long startTime) {
+        ProductNewBeans productNewBeans = new ProductNewBeans();
+        List<ProductNewBean> beans = new ArrayList<>();
+        
+        for (Product product : products) {
+            if (mapProductPropertiesMaps.containsKey(product.getId())) {
+                ProductNewBean bean = new ProductNewBean();
+                double price = getTwoDecimalFormat(mapProductPropertiesMaps.get(product.getId()).getPrice()) + 1000.0;;
+                bean.setProductId(product.getId());
+                bean.setName(product.getName());
+                bean.setPrice(getThreeDecimalFormat(price));
+                Double dis=mapProductPropertiesMaps.get(product.getId()).getDiscount();
+                bean.setDiscountedPrice(getThreeDecimalFormat(dis));
+                bean.setDiscountPCT(this.getPercentage(price, mapProductPropertiesMaps.get(product.getId()).getDiscount()));
+                bean.setImgurl(product.getImgurl());
+                bean.setDescription(product.getDescription());
+                beans.add(bean);
+                
+            }
+        }
+        productNewBeans.setProducts(beans);
+        return productNewBeans;
+    
+    }
+    public static Double getTwoDecimalFormat(Double unformatedValue) {
+        Double formatedValue = 0.0;
+        if (unformatedValue != null && unformatedValue > 0) {
+            DecimalFormat df = new DecimalFormat("#.00");
+            try {
+                formatedValue = Double.parseDouble(df.format(unformatedValue));
+            } catch (IllegalArgumentException e) {
+            }
+        }
+        return formatedValue;
+    }
+    
+    public static Double getThreeDecimalFormat(Double unformatedValue) {
+    	return (Math.ceil(unformatedValue * 2)) / 2.0;
+    }
+    
+    private Double getPercentage(Double original, Double discounted) {
+        Double discountPct = 0.00;
+        Double less = original - discounted;
+        if (original != null && discounted != null && less > 0.00) {
+            discountPct = (less / original) * 100;  // calculate discount percentage
+        }
+        DecimalFormat df = new DecimalFormat("#.00");
+        discountPct = Double.parseDouble(df.format(discountPct));
+        return discountPct;
+    }
     @Override
     public List<StatusBean> getTempProductLinks(String link) {
         boolean status = true;  //success

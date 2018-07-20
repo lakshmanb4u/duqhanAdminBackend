@@ -22,6 +22,13 @@ public class ProductRequistBean {
     private String orderId;
     private int start;
     private int limit;
+    private double discountOfferPct;
+    private String priceOrderBy;
+    private Integer priceGt;
+    private Integer priceLt;
+    private String lowPrice;
+    private String highPrice;
+    private String loadCategory;
 
     /**
      * @return the productId
@@ -177,4 +184,68 @@ public class ProductRequistBean {
         this.limit = limit;
     }
 
+    /**
+     * @return the discountOfferPct
+     */
+    public double getDiscountOfferPct() {
+        return discountOfferPct;
+    }
+
+    /**
+     * @param discountOfferPct the discountOfferPct to set
+     */
+    public void setDiscountOfferPct(double discountOfferPct) {
+        this.discountOfferPct = discountOfferPct;
+    }
+
+	public String getPriceOrderBy() {
+		return priceOrderBy;
+	}
+
+	public void setPriceOrderBy(String priceOrderBy) {
+		this.priceOrderBy = priceOrderBy;
+	}
+
+	public Integer getPriceGt() {
+		return priceGt;
+	}
+
+	public void setPriceGt(Integer priceGt) {
+		this.priceGt = priceGt;
+	}
+
+	public Integer getPriceLt() {
+		return priceLt;
+	}
+
+	public void setPriceLt(Integer priceLt) {
+		this.priceLt = priceLt;
+	}
+
+	public String getLowPrice() {
+		return lowPrice;
+	}
+
+	public void setLowPrice(String lowPrice) {
+		this.lowPrice = lowPrice;
+	}
+
+	public String getHighPrice() {
+		return highPrice;
+	}
+
+	public void setHighPrice(String highPrice) {
+		this.highPrice = highPrice;
+	}
+
+	public String getLoadCategory() {
+		return loadCategory;
+	}
+
+	public void setLoadCategory(String loadCategory) {
+		this.loadCategory = loadCategory;
+	}
+	
+	
+   
 }

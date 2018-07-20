@@ -13,6 +13,12 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.search.FullTextSession;
+import org.hibernate.search.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
+import org.springframework.transaction.annotation.Transactional;
 /**
  *
  * @author Android-3
@@ -91,9 +97,26 @@ public class ProductDaoJpa extends BaseDaoJpa<Product> implements ProductDao {
 
     @Override
     public List<Product> SearchProductByNameAndDescription(String searchName, int start, int limit) {
-        Query query = getEntityManager().createQuery("SELECT p FROM Product AS p WHERE p.name LIKE :searchName OR p.description LIKE :searchName ORDER BY p.lastUpdate DESC").setFirstResult(start).setMaxResults(limit);
-        query.setParameter("searchName", "%" + searchName + "%");
-        return query.getResultList();
+    	SessionFactory sessionFactory = getEntityManager().getEntityManagerFactory().unwrap(SessionFactory.class);
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        FullTextSession fullTextSession = Search.getFullTextSession(session);
+        
+        QueryBuilder qb = fullTextSession.getSearchFactory()
+                .buildQueryBuilder().forEntity(Product.class).get();
+       
+        
+        
+           org.apache.lucene.search.Query query =qb.keyword().fuzzy().withPrefixLength(0).onFields("name","description").matching(searchName).createQuery();
+            	
+            	
+        
+           org.hibernate.Query hibQuery = 
+                fullTextSession.createFullTextQuery(query, Product.class).setFirstResult(start).setMaxResults(limit);
+        	
+           List<Product> result = hibQuery.list();
+           
+           return result;
     }
 
     @Override

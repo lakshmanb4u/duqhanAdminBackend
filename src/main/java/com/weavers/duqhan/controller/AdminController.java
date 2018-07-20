@@ -14,6 +14,8 @@ import com.weavers.duqhan.dto.CategoryDto;
 import com.weavers.duqhan.dto.LoginBean;
 import com.weavers.duqhan.dto.OrderListDto;
 import com.weavers.duqhan.dto.OrderWorkflowDto;
+import com.weavers.duqhan.dto.ProductNewBeans;
+import com.weavers.duqhan.dto.ProductRequistBean;
 import com.weavers.duqhan.dto.StatusBean;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -144,5 +146,13 @@ public class AdminController {
     		categoryDto.setStatusCode("401");
     	}
     	return null;
+    }
+    
+    @RequestMapping(value = "/search-product", method = RequestMethod.POST)    // search product by product name
+    @ResponseBody
+    public ProductNewBeans searchProduct(HttpServletResponse response, HttpServletRequest request, @RequestBody ProductRequistBean requistBean) {
+        ProductNewBeans productBeans = new ProductNewBeans();
+        productBeans = productService.searchProducts(requistBean);
+        return productBeans;
     }
 }
